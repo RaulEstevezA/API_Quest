@@ -3,6 +3,7 @@ import { missions } from './missions'
 
 describe('mission catalogue', () => {
   it('has unique IDs and ordered missions', () => {
+    expect(missions).toHaveLength(56)
     expect(new Set(missions.map((mission) => mission.id)).size).toBe(missions.length)
     expect(missions.every((mission) => mission.order > 0)).toBe(true)
   })
