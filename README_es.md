@@ -32,7 +32,7 @@ npm test
 npm run build
 ```
 
-El build de producción utiliza `/games/API-Quest/` como ruta base para la web personal.
+El build de producción utiliza `/games/API_Quest/` como ruta base para la web personal.
 
 ## Sugerencias
 

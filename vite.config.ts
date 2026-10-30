@@ -23,7 +23,7 @@ export default defineConfig(({ command, isPreview }) => ({
       },
     },
   ],
-  base: command === 'build' || isPreview ? '/games/API-Quest/' : '/',
+  base: command === 'build' || isPreview ? '/games/API_Quest/' : '/',
   test: {
     environment: 'jsdom',
   },

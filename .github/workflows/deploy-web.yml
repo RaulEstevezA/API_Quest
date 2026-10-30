@@ -21,7 +21,7 @@ concurrency:
 env:
   NODE_VERSION: '22'
   SITE_REPOSITORY: RaulEstevezA/RaulEstevezA.github.io
-  GAME_PATH: games/API-Quest
+  GAME_PATH: games/API_Quest
 
 jobs:
   deploy:
