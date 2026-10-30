@@ -1,8 +1,10 @@
 import type { Mission } from '../core/missions'
 import { chapter1 } from './chapter-1'
 import { chapter2 } from './chapter-2'
+import { chapter3 } from './chapter-3'
+import { chapter4 } from './chapter-4'
 
-export const missions: Mission[] = [...chapter1, ...chapter2]
+export const missions: Mission[] = [...chapter1, ...chapter2, ...chapter3, ...chapter4]
 
 export function getMission(id: string): Mission | undefined {
   return missions.find((mission) => mission.id === id)
