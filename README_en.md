@@ -9,6 +9,7 @@ The seven chapters cover first requests, HTTP methods, status codes, JSON, query
 ## Features
 
 - Declarative bilingual mission catalogue with 56 missions.
+- First-visit onboarding with a direct path into the first mission and persistent help access.
 - Request builder for methods, endpoints, query parameters, headers, and JSON bodies.
 - Specific validation feedback, progressive hints, explanations, XP, and achievements.
 - API reference available inside the game.

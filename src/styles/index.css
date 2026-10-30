@@ -165,6 +165,23 @@ legend, .body-field > span { margin-bottom: var(--space-4); color: var(--muted);
 .method--post { color: var(--success); }.method--delete { color: var(--danger); }.method--patch,.method--put { color: var(--warning); }
 .docs__table { display: grid; overflow: auto; }
 .docs__table > div { min-width: 560px; padding: var(--space-8); display: grid; grid-template-columns: 140px 1fr; border-top: 1px solid var(--border); }
+.onboarding-dialog { width: min(760px, calc(100vw - 32px)); max-height: min(88vh, 840px); padding: 0; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); color: var(--text); box-shadow: var(--modal-shadow); }
+.onboarding-dialog::backdrop { background: var(--backdrop); }
+.onboarding-dialog__header { position: sticky; top: 0; z-index: 1; padding: var(--space-20) var(--space-24); display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-16); border-bottom: 1px solid var(--border); background: var(--surface); }
+.onboarding-dialog__header h2 { margin: 0; font-size: 1.35rem; }
+.onboarding-dialog__header .eyebrow { margin-bottom: var(--space-4); }
+.onboarding-dialog__body { padding: var(--space-24); }
+.onboarding-dialog__intro { margin: 0; color: var(--muted); line-height: 1.65; }
+.onboarding-steps { margin: var(--space-24) 0; padding: 0; display: grid; gap: var(--space-12); list-style: none; }
+.onboarding-steps li { display: grid; grid-template-columns: 36px 1fr; gap: var(--space-12); }
+.onboarding-steps li > span { width: 32px; height: 32px; display: grid; place-items: center; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent-text); font: 600 .8125rem var(--mono); }
+.onboarding-steps p { margin: var(--space-4) 0 0; color: var(--muted); font-size: .875rem; }
+.onboarding-locations { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-12); }
+.onboarding-locations article { padding: var(--space-16); border: 1px solid var(--border); border-radius: var(--radius); background: var(--page-bg); }
+.onboarding-locations h3 { margin: 0 0 var(--space-8); font-size: 1rem; }
+.onboarding-locations p { margin: 0; color: var(--muted); font-size: .8125rem; }
+.onboarding-dialog__note { margin: var(--space-20) 0 0; padding: var(--space-12) var(--space-16); border-left: 2px solid var(--accent); background: var(--accent-soft); font-size: .875rem; }
+.onboarding-dialog__actions { position: sticky; bottom: 0; padding: var(--space-16) var(--space-24); display: flex; justify-content: flex-end; gap: var(--space-12); border-top: 1px solid var(--border); background: var(--surface); }
 
 .eyebrow {
   margin: 0 0 var(--space-8);
@@ -195,6 +212,10 @@ h1 {
   .site-header { flex-wrap: wrap; padding: var(--space-8) 0; gap: var(--space-4); }
   .main-nav { order: 3; width: 100%; margin: 0; }
   .main-nav button { flex: 1; }
+  .onboarding-dialog__header, .onboarding-dialog__body { padding: var(--space-16); }
+  .onboarding-dialog__actions { padding: var(--space-12) var(--space-16); flex-direction: column-reverse; }
+  .onboarding-dialog__actions .button { width: 100%; }
+  .onboarding-locations { grid-template-columns: 1fr; }
   .app-shell {
     padding: var(--space-16);
   }

@@ -9,6 +9,7 @@ Los siete capítulos cubren primeras peticiones, métodos HTTP, códigos de esta
 ## Funciones
 
 - Catálogo declarativo bilingüe con 56 misiones.
+- Bienvenida para la primera visita, acceso directo a la primera misión y ayuda disponible en todo momento.
 - Constructor de métodos, endpoints, parámetros query, headers y cuerpos JSON.
 - Feedback de validación específico, pistas progresivas, explicaciones, XP y logros.
 - Documentación de API disponible dentro del juego.
