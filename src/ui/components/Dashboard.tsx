@@ -48,7 +48,10 @@ export function Dashboard({ language, progress, storageAvailable, onOpenMission,
       <section className="chapter-list" aria-labelledby="chapters-title">
         <div className="section-heading">
           <div><h2 id="chapters-title">{language === 'es' ? 'Capítulos' : 'Chapters'}</h2><p>{language === 'es' ? 'Completa un capítulo para desbloquear el siguiente.' : 'Complete a chapter to unlock the next one.'}</p></div>
-          <button className="button" type="button" onClick={onReset}>{language === 'es' ? 'Reiniciar progreso' : 'Reset progress'}</button>
+          <div className="section-actions">
+            <button className="button" type="button" onClick={onReset}>{language === 'es' ? 'Reiniciar progreso' : 'Reset progress'}</button>
+            <a className="button" href="../">{language === 'es' ? 'Juegos' : 'Games'}</a>
+          </div>
         </div>
         {chapters.map((chapter) => {
           const chapterMissions = getChapterMissions(chapter.id)

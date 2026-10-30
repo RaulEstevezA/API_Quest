@@ -89,6 +89,8 @@ textarea {
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-16); margin: var(--space-32) 0 var(--space-16); }
 .section-heading h2, .section-heading p { margin: 0; }
 .section-heading p { color: var(--muted); }
+.section-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-8); flex-wrap: wrap; }
+.section-actions a.button { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .chapter-list { display: grid; gap: var(--space-16); }
 .chapter-card { padding: var(--space-20); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
 .chapter-card--locked { opacity: .7; }
@@ -232,6 +234,7 @@ h1 {
   }
 
   .hero__heading, .section-heading, .hint-panel { align-items: stretch; flex-direction: column; }
+  .section-actions { justify-content: flex-start; }
   .hero__brand { align-items: flex-start; }
   .game-logo { width: 56px; height: 56px; }
   .progress-summary div { min-width: 0; flex: 1; }
