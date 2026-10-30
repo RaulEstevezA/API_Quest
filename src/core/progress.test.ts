@@ -24,6 +24,7 @@ describe('progress', () => {
     const replay = completeMission(first, 'c1-m1', 50, 3, 1)
     expect(replay.xp).toBe(75)
     expect(replay.completedMissions['c1-m1'].bestXp).toBe(75)
+    expect(replay.achievements).toContain('http-rookie')
   })
 
   it('round-trips through browser-like storage', () => {

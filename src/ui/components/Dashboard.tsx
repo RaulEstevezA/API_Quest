@@ -2,6 +2,7 @@ import { chapters } from '../../content/chapters'
 import { getChapterMissions } from '../../content/missions'
 import type { GameProgress } from '../../core/progress'
 import type { Language } from '../i18n'
+import { achievements } from '../../core/achievements'
 
 interface DashboardProps {
   language: Language
@@ -32,6 +33,8 @@ export function Dashboard({ language, progress, storageAvailable, onOpenMission,
           <div><dt>{language === 'es' ? 'Misiones' : 'Missions'}</dt><dd>{completed} / 56</dd></div>
         </dl>
       </section>
+
+      <section className="achievements" aria-labelledby="achievements-title"><div className="section-heading"><div><h2 id="achievements-title">Achievements</h2><p>{language === 'es' ? 'Logros vinculados a tu progreso de aprendizaje.' : 'Milestones tied to your learning progress.'}</p></div></div><div className="achievement-list">{achievements.map((achievement) => { const unlocked = progress.achievements.includes(achievement.id); return <article className={`achievement${unlocked ? ' achievement--unlocked' : ''}`} key={achievement.id}><span className="achievement__state">{unlocked ? (language === 'es' ? 'Conseguido' : 'Earned') : (language === 'es' ? 'Pendiente' : 'Pending')}</span><h3>{achievement.title[language]}</h3><p>{achievement.description[language]}</p></article> })}</div></section>
 
       {!storageAvailable && (
         <p className="notice notice--warning" role="status">

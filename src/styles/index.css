@@ -98,6 +98,13 @@ textarea {
 .mission-list button:hover { border-color: var(--muted); }
 .status { color: var(--muted); font-size: .75rem; white-space: nowrap; }
 .status--success { color: var(--success); }
+.achievement-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-12); }
+.achievement { padding: var(--space-16); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); opacity: .65; }
+.achievement--unlocked { border-color: var(--success); background: var(--success-soft); opacity: 1; }
+.achievement h3 { margin: var(--space-4) 0; font-size: 1rem; }
+.achievement p { margin: 0; color: var(--muted); font-size: .8125rem; }
+.achievement__state { color: var(--muted); font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.achievement--unlocked .achievement__state { color: var(--success); }
 
 .button { min-height: 40px; padding: 8px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-raised); color: var(--btn-text); font-size: .9rem; font-weight: 500; cursor: pointer; transition: border-color var(--transition-fast), background-color var(--transition-fast); }
 .button:hover:not(:disabled) { border-color: var(--muted); }

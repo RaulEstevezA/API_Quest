@@ -81,13 +81,17 @@ export function completeMission(
 ): GameProgress {
   const previousBest = progress.completedMissions[missionId]?.bestXp ?? 0
   const nextBest = Math.max(previousBest, earnedXp)
+  const completedMissions = {
+    ...progress.completedMissions,
+    [missionId]: { completed: true, bestXp: nextBest, attempts, hintsUsed },
+  }
   return {
     ...progress,
     xp: progress.xp - previousBest + nextBest,
     lastMissionId: missionId,
-    completedMissions: {
-      ...progress.completedMissions,
-      [missionId]: { completed: true, bestXp: nextBest, attempts, hintsUsed },
-    },
+    achievements: unlockedAchievements(Object.keys(completedMissions)),
+    completedMissions,
   }
 }
+import { unlockedAchievements } from './achievements'
+
