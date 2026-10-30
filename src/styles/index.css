@@ -77,6 +77,8 @@ textarea {
 }
 
 .hero { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-32); }
+.hero__brand { display: flex; align-items: flex-start; gap: var(--space-16); }
+.game-logo { width: 72px; height: 72px; flex: 0 0 auto; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .35)); }
 .progress-summary { display: flex; margin: 0; gap: var(--space-16); }
 .progress-summary div { min-width: 112px; padding: var(--space-16); border: 1px solid var(--border); border-radius: var(--radius); background: var(--page-bg); }
 .progress-summary dt { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: .04em; }
@@ -229,6 +231,7 @@ h1 {
   }
 
   .hero, .section-heading, .hint-panel { align-items: stretch; flex-direction: column; }
+  .game-logo { width: 56px; height: 56px; }
   .progress-summary div { min-width: 0; flex: 1; }
   .chapter-card__heading { grid-template-columns: auto 1fr; }
   .chapter-card__heading .badge { grid-column: 2; justify-self: start; }

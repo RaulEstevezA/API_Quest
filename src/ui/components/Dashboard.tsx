@@ -19,14 +19,17 @@ export function Dashboard({ language, progress, storageAvailable, onOpenMission,
   return (
     <>
       <section className="hero window" aria-labelledby="app-title">
-        <div>
-          <p className="eyebrow">REST API training</p>
-          <h1 id="app-title">API Quest</h1>
-          <p className="subtitle">
-            {language === 'es'
-              ? 'Aprende cómo funcionan las APIs construyendo peticiones, leyendo respuestas y resolviendo tareas de desarrollo.'
-              : 'Learn how APIs work by building requests, reading responses, and solving realistic development tasks.'}
-          </p>
+        <div className="hero__brand">
+          <img className="game-logo" src={`${import.meta.env.BASE_URL}api-quest-logo.png`} alt="" width="72" height="72" />
+          <div>
+            <p className="eyebrow">REST API training</p>
+            <h1 id="app-title">API Quest</h1>
+            <p className="subtitle">
+              {language === 'es'
+                ? 'Aprende cómo funcionan las APIs construyendo peticiones, leyendo respuestas y resolviendo tareas de desarrollo.'
+                : 'Learn how APIs work by building requests, reading responses, and solving realistic development tasks.'}
+            </p>
+          </div>
         </div>
         <dl className="progress-summary">
           <div><dt>XP</dt><dd>{progress.xp}</dd></div>
