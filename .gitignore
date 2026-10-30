@@ -1,0 +1,26 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Dependencias y builds
+node_modules/
+dist/
+build/
+coverage/
+
+# Entorno local
+.env
+.env.*
+!.env.example
+
+# Logs y temporales
+*.log
+*.tmp
+
+# Datos locales de trabajo
+local-data/
