@@ -76,9 +76,11 @@ textarea {
   box-shadow: var(--window-shadow);
 }
 
-.hero { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-32); }
-.hero__brand { display: flex; align-items: flex-start; gap: var(--space-16); }
+.hero { display: grid; gap: var(--space-16); }
+.hero__heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); flex-wrap: wrap; }
+.hero__brand { display: flex; align-items: center; gap: var(--space-16); }
 .game-logo { width: 72px; height: 72px; flex: 0 0 auto; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .35)); }
+.hero__description { max-width: 620px; margin: 0; color: var(--muted); line-height: 1.65; }
 .progress-summary { display: flex; margin: 0; gap: var(--space-16); }
 .progress-summary div { min-width: 112px; padding: var(--space-16); border: 1px solid var(--border); border-radius: var(--radius); background: var(--page-bg); }
 .progress-summary dt { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: .04em; }
@@ -203,7 +205,7 @@ h1 {
 
 .subtitle {
   max-width: 720px;
-  margin: var(--space-12) 0 0;
+  margin: var(--space-4) 0 0;
   color: var(--muted);
   font-size: 1.15rem;
   line-height: 1.65;
@@ -230,7 +232,8 @@ h1 {
     font-size: 1.75rem;
   }
 
-  .hero, .section-heading, .hint-panel { align-items: stretch; flex-direction: column; }
+  .hero__heading, .section-heading, .hint-panel { align-items: stretch; flex-direction: column; }
+  .hero__brand { align-items: flex-start; }
   .game-logo { width: 56px; height: 56px; }
   .progress-summary div { min-width: 0; flex: 1; }
   .chapter-card__heading { grid-template-columns: auto 1fr; }

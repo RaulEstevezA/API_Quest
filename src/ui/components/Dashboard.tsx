@@ -19,22 +19,24 @@ export function Dashboard({ language, progress, storageAvailable, onOpenMission,
   return (
     <>
       <section className="hero window" aria-labelledby="app-title">
-        <div className="hero__brand">
-          <img className="game-logo" src={`${import.meta.env.BASE_URL}api-quest-logo.png`} alt="" width="72" height="72" />
-          <div>
-            <p className="eyebrow">REST API training</p>
-            <h1 id="app-title">API Quest</h1>
-            <p className="subtitle">
-              {language === 'es'
-                ? 'Aprende cómo funcionan las APIs construyendo peticiones, leyendo respuestas y resolviendo tareas de desarrollo.'
-                : 'Learn how APIs work by building requests, reading responses, and solving realistic development tasks.'}
-            </p>
+        <div className="hero__heading">
+          <div className="hero__brand">
+            <img className="game-logo" src={`${import.meta.env.BASE_URL}api-quest-logo.png`} alt="" width="72" height="72" />
+            <div>
+              <h1 id="app-title">API Quest</h1>
+              <p className="subtitle">{language === 'es' ? 'Aprende APIs REST mediante retos prácticos' : 'Learn REST APIs through hands-on challenges'}</p>
+            </div>
           </div>
+          <dl className="progress-summary">
+            <div><dt>XP</dt><dd>{progress.xp}</dd></div>
+            <div><dt>{language === 'es' ? 'Misiones' : 'Missions'}</dt><dd>{completed} / 56</dd></div>
+          </dl>
         </div>
-        <dl className="progress-summary">
-          <div><dt>XP</dt><dd>{progress.xp}</dd></div>
-          <div><dt>{language === 'es' ? 'Misiones' : 'Missions'}</dt><dd>{completed} / 56</dd></div>
-        </dl>
+        <p className="hero__description">
+          {language === 'es'
+            ? 'Construye peticiones, interpreta respuestas y resuelve tareas de desarrollo en una API simulada.'
+            : 'Build requests, interpret responses, and solve development tasks in a simulated API.'}
+        </p>
       </section>
 
       {!storageAvailable && (
