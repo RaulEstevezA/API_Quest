@@ -27,24 +27,25 @@ a { color: var(--accent); }
 
 button { color: inherit; }
 
-.site-header,
-.site-footer {
-  width: min(100% - 48px, 1440px);
+.site-header {
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
+  padding: var(--space-16) var(--space-24) 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.site-header { min-height: 64px; }
-.site-footer { padding: var(--space-24) 0 var(--space-32); color: var(--muted); font-size: 0.8125rem; }
-.brand { border: 0; background: none; font-weight: 600; cursor: pointer; }
-.main-nav { margin-left: auto; margin-right: var(--space-16); display: flex; gap: var(--space-4); }
-.main-nav button { min-height: 36px; padding: 6px 10px; border: 0; border-radius: var(--radius-xs); background: transparent; color: var(--muted); cursor: pointer; }
-.main-nav button:hover { background: var(--surface-raised); color: var(--text); }
-.language-switch { display: flex; gap: var(--space-4); }
-.language-switch__button { min-width: 44px; min-height: 36px; border: 0; border-radius: var(--radius-xs); background: transparent; color: var(--muted); cursor: pointer; }
-.language-switch__button[aria-pressed='true'] { background: var(--surface-raised); color: var(--text); font-weight: 700; }
+.site-footer { width: min(100% - 48px, 1440px); margin: 0 auto; padding: var(--space-24) 0 var(--space-32); display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 0.8125rem; }
+.brand { min-height: 32px; padding: 0; border: 0; background: transparent; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.main-nav { margin-left: auto; margin-right: var(--space-16); display: flex; gap: var(--space-8); }
+.main-nav button { min-height: 32px; padding: 2px 6px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: .9rem; font-weight: 500; transition: color var(--transition-fast); }
+.main-nav button:hover { color: var(--text); }
+.language-switch { display: flex; gap: var(--space-8); }
+.language-switch__button { min-height: 32px; padding: 2px 6px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: .9rem; font-weight: 500; transition: color var(--transition-fast); }
+.language-switch__button[aria-pressed='true'] { background: transparent; color: var(--text); font-weight: 700; }
+.language-switch__button:hover { color: var(--text); }
 
 button,
 input,
@@ -212,8 +213,8 @@ h1 {
 }
 
 @media (max-width: 600px) {
-  .site-header, .site-footer { width: calc(100% - 32px); }
-  .site-header { flex-wrap: wrap; padding: var(--space-8) 0; gap: var(--space-4); }
+  .site-footer { width: calc(100% - 32px); }
+  .site-header { flex-wrap: wrap; padding: var(--space-16) var(--space-16) 0; gap: var(--space-8); }
   .main-nav { order: 3; width: 100%; margin: 0; }
   .main-nav button { flex: 1; }
   .onboarding-dialog__header, .onboarding-dialog__body { padding: var(--space-16); }
