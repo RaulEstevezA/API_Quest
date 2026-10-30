@@ -44,7 +44,6 @@ export function App() {
     <main className="app-shell">
       {mission ? <MissionWorkspace key={mission.id} mission={mission} language={language} onBack={() => setMissionId(null)} onComplete={(xp, attempts, hints) => recordCompletion(mission.id, xp, attempts, hints)} /> : view === 'docs' ? <ApiDocs language={language} /> : view === 'sandbox' ? <Sandbox language={language} /> : <Dashboard language={language} progress={progress} storageAvailable={storageAvailable} onOpenMission={setMissionId} onReset={resetWithConfirmation} />}
     </main>
-    <footer className="site-footer"><span>API Quest</span><a href="https://raulesteveza.github.io/">{language === 'es' ? 'Volver a la web' : 'Back to website'}</a></footer>
     <OnboardingDialog language={language} open={showOnboarding} onClose={closeOnboarding} onStart={startFirstMission} />
   </>
 }
