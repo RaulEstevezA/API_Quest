@@ -4,12 +4,15 @@ interface HeaderProps {
   language: Language
   onLanguageChange: (language: Language) => void
   onHome: () => void
+  onDocs: () => void
+  onSandbox: () => void
 }
 
-export function Header({ language, onLanguageChange, onHome }: HeaderProps) {
+export function Header({ language, onLanguageChange, onHome, onDocs, onSandbox }: HeaderProps) {
   return (
     <header className="site-header">
       <button className="brand" type="button" onClick={onHome}>Raúl Estévez</button>
+      <nav className="main-nav" aria-label={language === 'es' ? 'Navegación principal' : 'Main navigation'}><button type="button" onClick={onHome}>{language === 'es' ? 'Misiones' : 'Missions'}</button><button type="button" onClick={onDocs}>Docs</button><button type="button" onClick={onSandbox}>Sandbox</button></nav>
       <div className="language-switch" role="group" aria-label={language === 'es' ? 'Idioma' : 'Language'}>
         {(['en', 'es'] as const).map((option) => (
           <button
