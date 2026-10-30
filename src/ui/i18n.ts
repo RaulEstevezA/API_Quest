@@ -21,7 +21,7 @@ export function useLanguage() {
 
   useEffect(() => {
     document.documentElement.lang = language
-    document.title = language === 'es' ? 'API Quest — Aprende APIs REST' : 'API Quest — Learn REST APIs'
+    document.title = language === 'es' ? 'API Quest - Aprende APIs REST' : 'API Quest - Learn REST APIs'
   }, [language])
 
   const setLanguage = (next: Language) => {
