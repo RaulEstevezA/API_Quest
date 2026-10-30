@@ -7,9 +7,9 @@ const LANGUAGE_KEY = 'api-quest.language'
 
 function detectLanguage(): Language {
   try {
-    const own = localStorage.getItem(LANGUAGE_KEY)
     const shared = localStorage.getItem('lang')
-    const candidate = own ?? shared ?? navigator.language
+    const own = localStorage.getItem(LANGUAGE_KEY)
+    const candidate = shared ?? own ?? navigator.language
     return candidate.toLowerCase().startsWith('es') ? 'es' : 'en'
   } catch {
     return navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en'
