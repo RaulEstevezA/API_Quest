@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getMission } from '../content/missions'
 import { Dashboard } from './components/Dashboard'
 import { Header } from './components/Header'
@@ -22,6 +22,10 @@ export function App() {
   const [view, setView] = useState<'missions' | 'docs' | 'sandbox'>('missions')
   const [showOnboarding, setShowOnboarding] = useState(shouldShowOnboarding)
   const mission = missionId ? getMission(missionId) : undefined
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [missionId, view])
 
   const resetWithConfirmation = () => {
     const message = language === 'es' ? '¿Reiniciar todo el progreso y el XP?' : 'Reset all progress and XP?'
