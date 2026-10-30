@@ -1,10 +1,11 @@
 import { HTTP_METHODS, type ApiRequest, type HeaderEntry, type QueryEntry } from '../../core/http'
 import type { Language } from '../i18n'
+import type { RequestField } from '../../core/missions'
 
 interface Props {
   language: Language
   request: ApiRequest
-  fields: string[]
+  fields: RequestField[]
   disabled: boolean
   onChange: (request: ApiRequest) => void
   onSend: () => void

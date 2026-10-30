@@ -145,6 +145,8 @@ legend, .body-field > span { margin-bottom: var(--space-4); color: var(--muted);
 .feedback--error > strong { color: var(--danger); }
 .feedback--success { border-color: var(--success); background: var(--success-soft); }
 .feedback--success > strong, .xp-earned { color: var(--success); }
+.feedback--expected-error { border-color: var(--warning); background: var(--warning-soft); }
+.feedback--expected-error > strong { color: var(--danger); }
 .feedback pre { max-height: 260px; margin: var(--space-16) 0; padding: var(--space-16); overflow: auto; border-radius: var(--radius-sm); background: var(--page-bg); color: var(--text); font: 13px/1.6 var(--mono); }
 .feedback h3 { margin: var(--space-16) 0 var(--space-4); }
 .feedback p { margin: var(--space-8) 0 0; }

@@ -34,8 +34,6 @@ export function Dashboard({ language, progress, storageAvailable, onOpenMission,
         </dl>
       </section>
 
-      <section className="achievements" aria-labelledby="achievements-title"><div className="section-heading"><div><h2 id="achievements-title">Achievements</h2><p>{language === 'es' ? 'Logros vinculados a tu progreso de aprendizaje.' : 'Milestones tied to your learning progress.'}</p></div></div><div className="achievement-list">{achievements.map((achievement) => { const unlocked = progress.achievements.includes(achievement.id); return <article className={`achievement${unlocked ? ' achievement--unlocked' : ''}`} key={achievement.id}><span className="achievement__state">{unlocked ? (language === 'es' ? 'Conseguido' : 'Earned') : (language === 'es' ? 'Pendiente' : 'Pending')}</span><h3>{achievement.title[language]}</h3><p>{achievement.description[language]}</p></article> })}</div></section>
-
       {!storageAvailable && (
         <p className="notice notice--warning" role="status">
           {language === 'es' ? 'El progreso durará solo durante esta pestaña porque el almacenamiento local no está disponible.' : 'Progress will last only for this tab because local storage is unavailable.'}
@@ -71,6 +69,8 @@ export function Dashboard({ language, progress, storageAvailable, onOpenMission,
           )
         })}
       </section>
+
+      <section className="achievements" aria-labelledby="achievements-title"><div className="section-heading"><div><h2 id="achievements-title">Achievements</h2><p>{language === 'es' ? 'Logros vinculados a tu progreso de aprendizaje.' : 'Milestones tied to your learning progress.'}</p></div></div><div className="achievement-list">{achievements.map((achievement) => { const unlocked = progress.achievements.includes(achievement.id); return <article className={`achievement${unlocked ? ' achievement--unlocked' : ''}`} key={achievement.id}><span className="achievement__state">{unlocked ? (language === 'es' ? 'Conseguido' : 'Earned') : (language === 'es' ? 'Pendiente' : 'Pending')}</span><h3>{achievement.title[language]}</h3><p>{achievement.description[language]}</p></article> })}</div></section>
     </>
   )
 }

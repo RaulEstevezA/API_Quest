@@ -30,6 +30,13 @@ export function loadSandbox(storage: Pick<Storage, 'getItem'>): SandboxState {
 
 export function runSandboxRequest(state: SandboxState, request: ApiRequest): { state: SandboxState; response: ApiResponse } {
   const parts = request.path.trim().replace(/^\/+|\/+$/g, '').split('/').filter(Boolean)
+  if (parts.join('/') === 'auth/login' && request.method === 'POST') {
+    const body = jsonBody(request)
+    if (body?.email === 'developer@example.com' && body?.password === 'training-pass') {
+      return { state, response: { status: 200, statusText: 'OK', body: { accessToken: 'aq_live_7f3a', tokenType: 'Bearer' } } }
+    }
+    return { state, response: { status: 401, statusText: 'Unauthorized', body: { error: 'Invalid credentials' } } }
+  }
   const resource = parts[0] as 'users' | 'products' | 'orders'
   if (!['users', 'products', 'orders'].includes(resource)) return { state, response: { status: 404, statusText: 'Not Found', body: { error: 'Endpoint not found' } } }
   const collection = state[resource]

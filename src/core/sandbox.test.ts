@@ -15,4 +15,9 @@ describe('sandbox API', () => {
     expect(result.response.status).toBe(204)
     expect(result.state.products).toHaveLength(0)
   })
+
+  it('returns a token for the documented training credentials', () => {
+    const result = runSandboxRequest(createSandboxState(), { ...createEmptyRequest(), method: 'POST', path: '/auth/login', body: '{"email":"developer@example.com","password":"training-pass"}' })
+    expect(result.response).toMatchObject({ status: 200, body: { accessToken: 'aq_live_7f3a' } })
+  })
 })
