@@ -12,7 +12,7 @@ interface HeaderProps {
 export function Header({ language, onLanguageChange, onHome, onDocs, onSandbox, onHelp }: HeaderProps) {
   return (
     <header className="site-header">
-      <button className="brand" type="button" onClick={onHome}>Raúl Estévez</button>
+      <a className="brand" href="https://raulesteveza.github.io">Raúl Estévez</a>
       <nav className="main-nav" aria-label={language === 'es' ? 'Navegación principal' : 'Main navigation'}><button type="button" onClick={onHome}>{language === 'es' ? 'Misiones' : 'Missions'}</button><button type="button" onClick={onDocs}>Docs</button><button type="button" onClick={onSandbox}>Sandbox</button><button type="button" onClick={onHelp}>{language === 'es' ? 'Cómo jugar' : 'How to play'}</button></nav>
       <div className="language-switch" role="group" aria-label={language === 'es' ? 'Idioma' : 'Language'}>
         {(['en', 'es'] as const).map((option) => (
