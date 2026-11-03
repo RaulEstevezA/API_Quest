@@ -29,9 +29,9 @@ button { color: inherit; }
 
 .site-header {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: var(--space-32);
+  padding: var(--space-24) var(--space-24) var(--space-8);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -214,12 +214,8 @@ h1 {
   line-height: 1.65;
 }
 
-@media (max-width: 768px) {
-  .site-header { padding: var(--space-16); }
-}
-
 @media (max-width: 600px) {
-  .site-header { flex-wrap: wrap; gap: var(--space-8); }
+  .site-header { flex-wrap: wrap; gap: var(--space-8); padding: var(--space-16) var(--space-16) var(--space-4); }
   .main-nav { order: 3; width: 100%; margin: 0; }
   .main-nav button { flex: 1; }
   .onboarding-dialog__header, .onboarding-dialog__body { padding: var(--space-16); }
