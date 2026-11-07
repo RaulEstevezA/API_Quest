@@ -14,7 +14,7 @@ import type { Language } from '../i18n'
 import { ChapterCard } from './ChapterCard'
 import { TitleScreen } from './TitleScreen'
 
-const text = uiText.dashboard
+const text = uiText.menu
 
 interface DashboardProps {
   language: Language

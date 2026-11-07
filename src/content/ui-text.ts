@@ -53,7 +53,12 @@ export const uiText = {
     sandbox: t('Sandbox', 'Sandbox'),
     help: t('How to play', 'Cómo jugar'),
   },
-  dashboard: {
+  menu: {
+    label: t('Main menu', 'Menú principal'),
+    back: t('Menu', 'Menú'),
+    docs: t('Docs', 'Docs'),
+    sandbox: t('Sandbox', 'Sandbox'),
+    help: t('How to play', 'Cómo jugar'),
     subtitle: t('Learn REST APIs through hands-on challenges', 'Aprende APIs REST mediante retos prácticos'),
     description: t(
       'Build requests, interpret responses, and solve development tasks in a simulated API.',

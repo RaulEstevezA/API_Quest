@@ -11,7 +11,7 @@ import { chapterEmblems, lockEmblem } from '../art/emblems'
 import { PixelArt } from '../art/PixelArt'
 import type { Language } from '../i18n'
 
-const text = uiText.dashboard
+const text = uiText.menu
 
 interface ChapterCardProps {
   chapter: Chapter

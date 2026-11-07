@@ -39,7 +39,7 @@ export function App({ storage = browserStorage }: AppProps) {
   }, [screen])
 
   const resetWithConfirmation = () => {
-    if (window.confirm(uiText.dashboard.resetConfirmation[language])) reset()
+    if (window.confirm(uiText.menu.resetConfirmation[language])) reset()
   }
 
   const startFirstMission = () => {

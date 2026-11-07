@@ -6,7 +6,7 @@
 import { uiText } from '../../content/ui-text'
 import type { Language } from '../i18n'
 
-const text = uiText.dashboard
+const text = uiText.menu
 
 /**
  * Decorative traffic around the title. These are HTTP fragments, which read the same
