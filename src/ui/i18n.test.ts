@@ -1,4 +1,4 @@
-/** Tests of the initial language rule: inherit from the website, otherwise English. */
+/** Tests of the initial language rule: the website preference, then the browser, then English. */
 
 import { describe, expect, it } from 'vitest'
 import { createMemoryStorage } from '../core/storage'
@@ -6,26 +6,35 @@ import { detectLanguage } from './i18n'
 
 describe('detectLanguage', () => {
   it.each([
-    ['es', 'es'],
-    ['en', 'en'],
-    ['es-ES', 'es'],
-    ['fr', 'en'],
-  ])('reads the website preference %s as %s', (saved, expected) => {
+    ['es', 'en-US', 'es'],
+    ['en', 'es-ES', 'en'],
+    ['es-ES', 'en-US', 'es'],
+  ])('prefers the website preference %s over the browser language %s', (saved, browser, expected) => {
     const storage = createMemoryStorage()
     storage.setItem('lang', saved)
-    expect(detectLanguage(storage)).toBe(expected)
+    expect(detectLanguage(storage, browser)).toBe(expected)
   })
 
-  it('uses English when the website has not saved a language', () => {
-    expect(detectLanguage(createMemoryStorage())).toBe('en')
+  it.each([
+    ['es-ES', 'es'],
+    ['en-GB', 'en'],
+    ['fr-FR', 'en'],
+  ])('uses the browser language %s when the website has not saved one', (browser, expected) => {
+    expect(detectLanguage(createMemoryStorage(), browser)).toBe(expected)
   })
 
-  it('uses English when storage is blocked', () => {
+  it('moves on to the browser when the saved language is not one of the game', () => {
+    const storage = createMemoryStorage()
+    storage.setItem('lang', 'fr')
+    expect(detectLanguage(storage, 'es-ES')).toBe('es')
+  })
+
+  it('moves on to the browser when storage is blocked', () => {
     const blocked = {
       getItem: () => {
         throw new Error('Storage is blocked')
       },
     }
-    expect(detectLanguage(blocked)).toBe('en')
+    expect(detectLanguage(blocked, 'es-ES')).toBe('es')
   })
 })

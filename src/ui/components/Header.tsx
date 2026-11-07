@@ -5,9 +5,7 @@
  */
 
 import { uiText } from '../../content/ui-text'
-import type { Language } from '../i18n'
-
-const LANGUAGES: readonly Language[] = ['en', 'es']
+import { LANGUAGES, type Language } from '../i18n'
 
 interface HeaderProps {
   language: Language
