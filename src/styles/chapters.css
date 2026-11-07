@@ -58,7 +58,7 @@
 
 .chapter-card--locked {
   --chapter-accent: var(--muted);
-  background: rgba(10, 21, 18, 0.7);
+  background: var(--surface);
   box-shadow: none;
 }
 
