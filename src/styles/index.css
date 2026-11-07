@@ -1,20 +1,18 @@
 /*
- * Stylesheet entry point. Each file styles one area of the game; rules still here
- * belong to areas without a file of their own.
+ * Stylesheet entry point. Each file styles one area of the game. Files that define
+ * variables go first, and the rest only depend on those variables.
  */
 
 @import './tokens.css';
+@import './chapter-themes.css';
 @import './base.css';
 @import './header.css';
 @import './backdrop.css';
-@import './chapter-themes.css';
 @import './title-screen.css';
 @import './chapters.css';
-@import './response.css';
+@import './achievements.css';
 @import './mission.css';
 @import './request-builder.css';
+@import './response.css';
 @import './docs.css';
 @import './dialog.css';
-@import './achievements.css';
-
-

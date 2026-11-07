@@ -81,8 +81,7 @@
   padding: var(--space-12);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background:
-    radial-gradient(circle, color-mix(in srgb, var(--chapter-accent) 16%, transparent), transparent 72%),
+  background: radial-gradient(circle, color-mix(in srgb, var(--chapter-accent) 16%, transparent), transparent 72%),
     var(--surface-sunken);
   text-align: center;
 }
