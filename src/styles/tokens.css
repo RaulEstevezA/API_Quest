@@ -1,3 +1,8 @@
+/*
+ * Design tokens: a copy of the values defined in personal_web_style/tokens. Use these
+ * variables rather than literal values, and update them there first.
+ */
+
 :root {
   color-scheme: dark;
   --page-bg: #0d1117;
@@ -16,6 +21,7 @@
   --warning: #d29922;
   --warning-soft: #2b2111;
   --danger: #f85149;
+  --danger-soft: #25171c; /* Error box: opaque equivalent of --danger at 10% over --page-bg. */
   --hover: rgba(110, 118, 129, 0.1);
   --backdrop: rgba(0, 0, 0, 0.85);
   --selection: rgba(56, 139, 253, 0.35);
