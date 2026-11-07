@@ -118,6 +118,7 @@ export const uiText = {
   },
   response: {
     title: t('Response', 'Respuesta'),
+    client: t('Client', 'Cliente'),
   },
   sandbox: {
     eyebrow: t('Free practice', 'Práctica libre'),

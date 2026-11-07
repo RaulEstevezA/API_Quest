@@ -1,0 +1,145 @@
+/*
+ * Response pane: the feedback of each attempt and the cable the request travels along.
+ * The status line always gives the result in text, whatever the colour of the box.
+ */
+
+.feedback {
+  padding: var(--space-16);
+  border: 1px solid;
+  border-radius: var(--radius);
+  animation: feedback-arrive 0.25s ease-out;
+}
+
+.feedback > strong {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.feedback--error {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.feedback--error > strong {
+  color: var(--danger);
+}
+
+.feedback--success {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.feedback--success > strong {
+  color: var(--success);
+}
+
+/* The mission asked for this error, so it is shown as an expected result. */
+.feedback--expected-error {
+  border-color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.feedback--expected-error > strong {
+  color: var(--danger);
+}
+
+.feedback pre {
+  max-height: 260px;
+  margin: var(--space-12) 0;
+  padding: var(--space-12) var(--space-16);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: 13px/1.6 var(--mono);
+}
+
+.feedback h3 {
+  margin: var(--space-16) 0 var(--space-4);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.feedback p {
+  margin: var(--space-8) 0 0;
+}
+
+.feedback ul {
+  margin: var(--space-8) 0 0;
+  padding-left: var(--space-20);
+}
+
+.xp-earned {
+  display: inline-block;
+  color: var(--success);
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 900;
+  animation: xp-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+@keyframes feedback-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes xp-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+/* Cable between the player and the API */
+
+.packet-wire {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-12);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.packet-wire__line {
+  position: relative;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--border) 0 8px, transparent 8px 12px);
+}
+
+/* The packet travels to the API and back, restarted by a new React key on every send. */
+.packet-wire__line i {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--chapter-accent);
+  box-shadow: 0 0 10px var(--chapter-accent);
+  opacity: 0;
+  animation: packet-trip 0.9s ease-in-out;
+}
+
+@keyframes packet-trip {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+  50% {
+    left: calc(100% - 8px);
+    opacity: 1;
+  }
+  100% {
+    left: 0;
+    opacity: 0;
+  }
+}
