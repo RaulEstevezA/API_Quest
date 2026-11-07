@@ -10,33 +10,29 @@ import { safeRead, safeWrite, type StorageAdapter } from '../core/storage'
 /** Languages of the game. */
 export type Language = 'en' | 'es'
 
-/** Preference of this game. */
-const LANGUAGE_KEY = 'api-quest.language'
-
-/** Preference shared with the personal website and the demos. */
+/** Preference shared with the personal website, which is served from the same origin. */
 const SHARED_LANGUAGE_KEY = 'lang'
 
 /**
- * Chooses the initial language. The shared preference goes first so that a language
- * chosen on the website carries over when the player arrives at the game.
+ * Chooses the initial language: the game inherits the one selected on the website,
+ * and uses English when there is nothing to inherit. The browser language is
+ * deliberately ignored, so that the game never disagrees with the website.
  *
- * @param storage Store that holds the preferences.
- * @param browserLanguage Language reported by the browser, used when nothing is saved.
- * @returns Spanish for any `es` variant; English otherwise.
+ * @param storage Store that holds the shared preference.
+ * @returns Spanish for any saved `es` variant; English otherwise.
  */
-export function detectLanguage(storage: Pick<StorageAdapter, 'getItem'>, browserLanguage: string): Language {
-  const candidate = safeRead(storage, SHARED_LANGUAGE_KEY) ?? safeRead(storage, LANGUAGE_KEY) ?? browserLanguage
-  return candidate.toLowerCase().startsWith('es') ? 'es' : 'en'
+export function detectLanguage(storage: Pick<StorageAdapter, 'getItem'>): Language {
+  return safeRead(storage, SHARED_LANGUAGE_KEY)?.toLowerCase().startsWith('es') ? 'es' : 'en'
 }
 
 /**
  * Holds the current language and keeps the document language and title in sync.
  *
- * @param storage Store that holds the preferences.
+ * @param storage Store that holds the shared preference.
  * @returns The current language and the function that changes and saves it.
  */
 export function useLanguage(storage: StorageAdapter) {
-  const [language, setLanguageState] = useState<Language>(() => detectLanguage(storage, navigator.language))
+  const [language, setLanguageState] = useState<Language>(() => detectLanguage(storage))
 
   useEffect(() => {
     document.documentElement.lang = language
@@ -45,7 +41,6 @@ export function useLanguage(storage: StorageAdapter) {
 
   const setLanguage = (next: Language) => {
     setLanguageState(next)
-    safeWrite(storage, LANGUAGE_KEY, next)
     safeWrite(storage, SHARED_LANGUAGE_KEY, next)
   }
 

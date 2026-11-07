@@ -53,14 +53,13 @@ describe('initial menu', () => {
     expect(header?.querySelector('nav')).toBeNull()
   })
 
-  it('changes the language of the interface and saves both preferences', () => {
+  it('changes the language of the interface and saves it for the website', () => {
     const storage = returningPlayerStorage()
     renderApp(storage)
     const spanish = [...container.querySelectorAll('header button')].find((button) => button.textContent === 'ES')
     act(() => spanish?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
     expect(container.querySelector('#chapters-title')?.textContent).toBe('Capítulos')
     expect(document.documentElement.lang).toBe('es')
-    expect(storage.getItem('api-quest.language')).toBe('es')
     expect(storage.getItem('lang')).toBe('es')
   })
 
