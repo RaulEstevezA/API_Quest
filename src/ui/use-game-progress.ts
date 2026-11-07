@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react'
-import { completeMission, loadProgress, resetProgress, saveProgress } from '../core/progress'
+import { completeMission, earnAchievement, loadProgress, resetProgress, saveProgress } from '../core/progress'
 import type { StorageAdapter } from '../core/storage'
 
 /**
@@ -30,6 +30,7 @@ export function useGameProgress(storage: StorageAdapter) {
     recordCompletion: (missionId: string, xp: number, attempts: number, hintsUsed: number) => {
       setProgress((current) => completeMission(current, missionId, xp, attempts, hintsUsed))
     },
+    earnAchievement: (id: string) => setProgress((current) => earnAchievement(current, id)),
     reset: () => {
       setProgress(resetProgress(storage))
       setProgressWasReset(false)

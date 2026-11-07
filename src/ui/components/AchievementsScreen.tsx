@@ -1,6 +1,7 @@
 /**
  * Achievements screen. The list and the unlock rules are in `core/achievements.ts`;
- * this screen only shows which ones the player has earned.
+ * this screen only shows which ones the player has earned. A secret achievement
+ * reveals nothing about itself until then.
  */
 
 import { uiText } from '../../content/ui-text'
@@ -30,12 +31,13 @@ export function AchievementsScreen({ language, earned }: AchievementsScreenProps
       <div className="achievement-list">
         {achievements.map((achievement) => {
           const unlocked = earned.includes(achievement.id)
+          const hidden = achievement.secret && !unlocked
           return (
             <article className={`achievement${unlocked ? ' achievement--unlocked' : ''}`} key={achievement.id}>
               <PixelArt rows={medalEmblem} />
               <span className="achievement__state">{(unlocked ? text.earned : text.pending)[language]}</span>
-              <h3>{achievement.title[language]}</h3>
-              <p>{achievement.description[language]}</p>
+              <h3>{hidden ? '???' : achievement.title[language]}</h3>
+              <p>{hidden ? '???' : achievement.description[language]}</p>
             </article>
           )
         })}

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { calculateXp } from './scoring'
 import {
   completeMission,
+  earnAchievement,
   createInitialProgress,
   findFirstPendingMission,
   findNextMission,
@@ -58,6 +59,12 @@ describe('progress', () => {
     expect(loadProgress(storage)).toEqual({ progress: createInitialProgress(), status: 'new' })
     expect(saveProgress(storage, createInitialProgress())).toBe(false)
     expect(resetProgress(storage)).toEqual(createInitialProgress())
+  })
+
+  it('keeps secret achievements when missions recalculate the others', () => {
+    const secret = earnAchievement(createInitialProgress(), 'night-shift')
+    expect(earnAchievement(secret, 'night-shift')).toBe(secret)
+    expect(completeMission(secret, 'c1-m1', 100, 1, 0).achievements).toEqual(['http-rookie', 'night-shift'])
   })
 
   it('unlocks a chapter only after every mission of the previous one', () => {

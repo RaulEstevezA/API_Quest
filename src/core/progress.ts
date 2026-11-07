@@ -8,7 +8,7 @@
  * progress must never be lost silently.
  */
 
-import { unlockedAchievements } from './achievements'
+import { isSecretAchievement, unlockedAchievements } from './achievements'
 import { safeRead, safeRemove, safeWrite, type StorageAdapter } from './storage'
 
 /** Version of the saved format. Saved data with another version is not restored. */
@@ -141,9 +141,23 @@ export function completeMission(
     ...progress,
     xp: progress.xp - previousBest + nextBest,
     lastMissionId: missionId,
-    achievements: unlockedAchievements(Object.keys(completedMissions)),
+    achievements: [
+      ...unlockedAchievements(Object.keys(completedMissions)),
+      ...progress.achievements.filter(isSecretAchievement),
+    ],
     completedMissions,
   }
+}
+
+/**
+ * Records an achievement earned by an action rather than by missions.
+ *
+ * @param progress Current progress. It is not mutated.
+ * @param id Identifier of the achievement.
+ * @returns The new progress, or the same one if it was already earned.
+ */
+export function earnAchievement(progress: GameProgress, id: string): GameProgress {
+  return progress.achievements.includes(id) ? progress : { ...progress, achievements: [...progress.achievements, id] }
 }
 
 /**

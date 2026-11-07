@@ -10,6 +10,9 @@ import type { LocalizedText } from './missions'
 /** Missions per chapter. Must match the catalogue, which a content test verifies. */
 const MISSIONS_PER_CHAPTER = 8
 
+/** Secret achievement earned in the Sandbox. Finding it is part of the secret. */
+export const NIGHT_SHIFT_ACHIEVEMENT = 'night-shift'
+
 /** Missions in the whole game. Must match the catalogue, which a content test verifies. */
 const TOTAL_MISSIONS = 56
 
@@ -20,6 +23,8 @@ export interface Achievement {
   description: LocalizedText
   /** Decides whether the achievement is earned from the identifiers of the completed missions. */
   isUnlocked: (completedIds: ReadonlySet<string>) => boolean
+  /** `true` when it is earned by an action rather than by missions, and stays hidden until then. */
+  secret?: boolean
 }
 
 /**
@@ -88,6 +93,13 @@ export const achievements: Achievement[] = [
     description: { en: 'Complete all 56 missions.', es: 'Completa las 56 misiones.' },
     isUnlocked: (completedIds) => completedIds.size >= TOTAL_MISSIONS,
   },
+  {
+    id: NIGHT_SHIFT_ACHIEVEMENT,
+    title: { en: 'Night Shift', es: 'Night Shift' },
+    description: { en: 'Turn off the lights of the server room.', es: 'Apaga las luces de la sala de servidores.' },
+    isUnlocked: () => false,
+    secret: true,
+  },
 ]
 
 /**
@@ -99,4 +111,15 @@ export const achievements: Achievement[] = [
 export function unlockedAchievements(completedIds: string[]): string[] {
   const completed = new Set(completedIds)
   return achievements.filter((achievement) => achievement.isUnlocked(completed)).map((achievement) => achievement.id)
+}
+
+/**
+ * Tells whether an achievement is secret. Secret achievements cannot be recalculated from
+ * the completed missions, so progress has to keep them.
+ *
+ * @param id Identifier of the achievement.
+ * @returns `true` when it is secret.
+ */
+export function isSecretAchievement(id: string): boolean {
+  return achievements.some((achievement) => achievement.id === id && achievement.secret)
 }

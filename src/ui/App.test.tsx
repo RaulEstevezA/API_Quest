@@ -119,6 +119,14 @@ describe('initial menu', () => {
     expect(container.querySelector('dialog.modal--wide .docs__grid')).not.toBeNull()
   })
 
+  it('hides a secret achievement until it is earned', () => {
+    const storage = returningPlayerStorage()
+    renderApp(storage)
+    openFromMenu('Achievements')
+    expect(container.textContent).toContain('???')
+    expect(container.textContent).not.toContain('Night Shift')
+  })
+
   it('tells the player when saved progress could not be restored', () => {
     const storage = returningPlayerStorage()
     storage.setItem(PROGRESS_STORAGE_KEY, '{"version":99}')
