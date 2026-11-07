@@ -1,0 +1,187 @@
+/*
+ * Title of the initial menu (components/TitleScreen.tsx). It has no panel behind it,
+ * because the background scene is part of the composition.
+ */
+
+.title-screen {
+  position: relative;
+  padding: var(--space-16) 0 var(--space-32);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title-screen__logo {
+  width: clamp(130px, 19vw, 200px);
+  height: auto;
+  filter: drop-shadow(0 0 28px rgba(61, 255, 162, 0.35));
+}
+
+.title-screen__name {
+  margin-top: var(--space-4);
+  font-size: clamp(2.9rem, 9vw, 6.4rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  text-shadow:
+    4px 4px 0 #04291b,
+    0 0 36px rgba(61, 255, 162, 0.28);
+}
+
+.title-screen__subtitle {
+  margin: var(--space-12) 0 0;
+  color: var(--accent-text);
+  font-family: var(--mono);
+  font-size: clamp(0.92rem, 1.7vw, 1.15rem);
+  font-weight: 600;
+}
+
+.title-screen__description {
+  max-width: 560px;
+  margin: var(--space-8) 0 0;
+  color: var(--btn-text);
+  line-height: 1.65;
+}
+
+/* Progress summary */
+
+.progress-summary {
+  width: min(100%, 420px);
+  margin: var(--space-24) 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+}
+
+.progress-summary > div:not(.progress-summary__bar) {
+  padding: var(--space-12) var(--space-16);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(3, 8, 6, 0.86);
+  box-shadow: var(--hard-shadow);
+}
+
+.progress-summary dt {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.progress-summary dd {
+  margin: var(--space-4) 0 0;
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-text);
+}
+
+.progress-summary__bar {
+  grid-column: 1 / -1;
+  height: 8px;
+  margin-top: var(--space-4);
+  border: 1px solid var(--border);
+  background: var(--surface-sunken);
+}
+
+.progress-summary__bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--lime), var(--accent));
+  transition: width 0.4s ease;
+}
+
+/* Decorative traffic: only where there is room for it beside the title. */
+
+.title-screen__traffic {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.traffic-chip {
+  position: absolute;
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  background: rgba(3, 8, 6, 0.86);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  animation: traffic-float 6s ease-in-out infinite alternate;
+}
+
+.traffic-chip--info {
+  color: var(--accent-text);
+}
+
+.traffic-chip--success {
+  color: var(--success);
+}
+
+.traffic-chip--lime {
+  color: var(--lime);
+}
+
+.traffic-chip--danger {
+  color: var(--danger);
+}
+
+.traffic-chip--warning {
+  color: var(--warning);
+}
+
+.traffic-chip:nth-child(1) {
+  top: 8%;
+  left: 13%;
+}
+
+.traffic-chip:nth-child(2) {
+  top: 16%;
+  right: 16%;
+  animation-delay: -2s;
+}
+
+.traffic-chip:nth-child(3) {
+  top: 40%;
+  left: 5%;
+  animation-delay: -4s;
+}
+
+.traffic-chip:nth-child(4) {
+  top: 46%;
+  right: 6%;
+  animation-delay: -1s;
+}
+
+.traffic-chip:nth-child(5) {
+  top: 72%;
+  left: 14%;
+  animation-delay: -3s;
+}
+
+.traffic-chip:nth-child(6) {
+  top: 76%;
+  right: 12%;
+  animation-delay: -5s;
+}
+
+@keyframes traffic-float {
+  to {
+    transform: translateY(-14px);
+  }
+}
+
+@media (max-width: 1000px) {
+  .title-screen__traffic {
+    display: none;
+  }
+}

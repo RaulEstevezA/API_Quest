@@ -1,0 +1,256 @@
+/*
+ * Chapter route of the initial menu (components/ChapterCard.tsx): the cards are the
+ * stops of a line, joined by a dashed connector between their emblems.
+ */
+
+.section-heading {
+  margin: var(--space-32) 0 var(--space-16);
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.section-heading p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.section-actions a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.chapter-list {
+  display: grid;
+  gap: var(--space-20);
+}
+
+.chapter-list .section-heading {
+  margin-bottom: 0;
+}
+
+.chapter-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: var(--space-20);
+  padding: var(--space-20);
+  border: 1px solid color-mix(in srgb, var(--chapter-accent) 38%, var(--border));
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--window-shadow);
+}
+
+/* Connector to the next stop. It starts at the centre of the emblem column. */
+.chapter-card:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 71px;
+  height: calc(var(--space-20) + 2px);
+  border-left: 3px dashed var(--chapter-accent);
+  opacity: 0.6;
+}
+
+.chapter-card--locked {
+  --chapter-accent: var(--muted);
+  background: rgba(10, 21, 18, 0.7);
+  box-shadow: none;
+}
+
+.chapter-card__emblem {
+  align-self: start;
+  padding: var(--space-12);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--chapter-accent) 16%, transparent), transparent 72%),
+    var(--surface-sunken);
+  text-align: center;
+}
+
+.chapter-card__emblem svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.chapter-card__number {
+  display: block;
+  margin-top: var(--space-4);
+  color: var(--chapter-accent);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.chapter-card__heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.chapter-card__heading h3 {
+  margin: 0;
+  color: var(--chapter-accent);
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.chapter-card__heading p {
+  margin: var(--space-4) 0 0;
+  color: var(--muted);
+}
+
+.badge {
+  flex: none;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--btn-text);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.chapter-card__segments {
+  margin-top: var(--space-12);
+  display: flex;
+  gap: 3px;
+}
+
+.chapter-card__segments i {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-raised);
+}
+
+.chapter-card__segments i.is-filled {
+  background: var(--chapter-accent);
+}
+
+/* Missions */
+
+.mission-list {
+  margin: var(--space-16) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-8);
+  list-style: none;
+}
+
+.mission-tile {
+  width: 100%;
+  height: 100%;
+  min-height: 64px;
+  padding: var(--space-8) var(--space-12);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  gap: 0 var(--space-8);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.mission-tile:hover {
+  border-color: var(--chapter-accent);
+  transform: translate(-1px, -1px);
+}
+
+.mission-tile b {
+  color: var(--chapter-accent);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.mission-tile span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.mission-tile small {
+  grid-column: 2;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+.mission-tile--done {
+  border-color: color-mix(in srgb, var(--chapter-accent) 55%, var(--border));
+  background: color-mix(in srgb, var(--chapter-accent) 8%, var(--surface-sunken));
+}
+
+.mission-tile--done small {
+  color: var(--chapter-accent);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .section-actions {
+    justify-content: flex-start;
+  }
+
+  .chapter-card {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: var(--space-12);
+    padding: var(--space-12);
+  }
+
+  .chapter-card:not(:last-child)::after {
+    left: 42px;
+  }
+
+  .chapter-card__emblem {
+    padding: var(--space-8);
+  }
+
+  .chapter-card__heading {
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .chapter-card__segments,
+  .mission-list {
+    grid-column: 1 / -1;
+    margin-left: -76px;
+  }
+
+  .mission-list {
+    grid-template-columns: 1fr;
+  }
+}
