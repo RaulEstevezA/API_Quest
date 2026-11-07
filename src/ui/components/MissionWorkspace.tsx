@@ -9,7 +9,10 @@ import { evaluateRequest, type EvaluationIssue } from '../../core/evaluate-reque
 import { createEmptyRequest, type ApiRequest } from '../../core/http'
 import type { Mission } from '../../core/missions'
 import { calculateXp } from '../../core/scoring'
+import { chapterEmblems } from '../art/emblems'
+import { PixelArt } from '../art/PixelArt'
 import type { Language } from '../i18n'
+import { PacketWire } from './PacketWire'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
 
@@ -87,7 +90,7 @@ export function MissionWorkspace({ mission, language, onBack, onComplete }: Miss
   }
 
   return (
-    <>
+    <div className={`chapter-theme chapter-theme--${mission.chapter}`}>
       <div className="mission-toolbar">
         <button className="button" type="button" onClick={onBack}>
           ← {text.backToChapters[language]}
@@ -99,17 +102,23 @@ export function MissionWorkspace({ mission, language, onBack, onComplete }: Miss
         <span>{xp} XP</span>
       </div>
 
-      <section className="mission-brief window">
-        <p className="eyebrow">{text.position(mission.chapter, mission.order)[language]}</p>
-        <h1>{mission.title[language]}</h1>
-        <p>{mission.brief[language]}</p>
-        <div className="objective">
-          <strong>{text.objective[language]}</strong>
-          <span>{mission.objective[language]}</span>
+      <section className="mission-brief mission-brief--ticket window">
+        <div className="mission-brief__emblem">
+          <PixelArt rows={chapterEmblems[mission.chapter]} />
+        </div>
+        <div>
+          <p className="eyebrow">{text.position(mission.chapter, mission.order)[language]}</p>
+          <h1>{mission.title[language]}</h1>
+          <p>{mission.brief[language]}</p>
+          <div className="objective">
+            <strong>{text.objective[language]}</strong>
+            <span>{mission.objective[language]}</span>
+          </div>
         </div>
       </section>
 
       <div className="workspace">
+        <PacketWire language={language} sendCount={attempts} />
         <RequestBuilder
           language={language}
           request={request}
@@ -142,6 +151,6 @@ export function MissionWorkspace({ mission, language, onBack, onComplete }: Miss
           )}
         </section>
       )}
-    </>
+    </div>
   )
 }

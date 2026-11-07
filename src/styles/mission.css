@@ -1,0 +1,212 @@
+/*
+ * Mission and Sandbox screens: toolbar, brief, workspace panes and hints. The whole
+ * screen takes the colour of its chapter through --chapter-accent.
+ */
+
+.mission-toolbar {
+  min-height: 48px;
+  margin-bottom: var(--space-12);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.mission-toolbar .button {
+  margin-right: auto;
+}
+
+.mission-toolbar span {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(3, 8, 6, 0.86);
+}
+
+.mission-brief {
+  padding: var(--space-24);
+}
+
+.mission-brief h1 {
+  font-size: 1.75rem;
+}
+
+.mission-brief p:not(.eyebrow) {
+  margin: var(--space-8) 0;
+  color: var(--btn-text);
+}
+
+/* A mission reads like a ticket: the emblem on the left and a coloured edge. */
+.mission-brief--ticket {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--space-20);
+  border-left: 4px solid var(--chapter-accent);
+}
+
+.mission-brief__emblem {
+  width: 72px;
+  height: 72px;
+  padding: var(--space-8);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+
+.mission-brief__emblem svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.objective {
+  margin-top: var(--space-16);
+  padding: var(--space-12) var(--space-16);
+  display: flex;
+  gap: var(--space-12);
+  border: 1px dashed color-mix(in srgb, var(--chapter-accent) 60%, var(--border));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--chapter-accent) 8%, var(--surface-sunken));
+}
+
+.objective strong {
+  color: var(--chapter-accent);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  line-height: 1.9;
+  text-transform: uppercase;
+}
+
+.workspace {
+  margin-top: var(--space-16);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: var(--space-16);
+}
+
+/* Panes */
+
+.pane {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--hard-shadow);
+}
+
+.pane__header,
+.pane__footer {
+  min-height: 48px;
+  padding: var(--space-8) var(--space-16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.pane__header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+
+.pane__header h2 {
+  margin: 0;
+  color: var(--chapter-accent);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pane__footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.pane__footer .button {
+  flex: none;
+}
+
+.pane__body {
+  min-height: 340px;
+  padding: var(--space-16);
+}
+
+/* Hints */
+
+.hint-panel {
+  margin-top: var(--space-16);
+  padding: var(--space-16);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-16);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.hint-panel h2 {
+  margin: 0;
+  color: var(--warning);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hint-panel p {
+  margin: var(--space-8) 0 0;
+  color: var(--btn-text);
+}
+
+.hint-panel strong {
+  color: var(--warning);
+  font-family: var(--mono);
+}
+
+.hint-panel .button {
+  flex: none;
+}
+
+@media (max-width: 1100px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .pane__body {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .mission-toolbar .button {
+    width: 100%;
+    margin: 0;
+  }
+
+  .mission-brief--ticket {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+
+  .objective,
+  .hint-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
