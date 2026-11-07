@@ -10,6 +10,7 @@ import type { RequestField } from '../../core/missions'
 import { createSandboxState, loadSandbox, runSandboxRequest, saveSandbox } from '../../core/sandbox'
 import type { StorageAdapter } from '../../core/storage'
 import type { Language } from '../i18n'
+import { PacketWire } from './PacketWire'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
 
@@ -28,6 +29,7 @@ export function Sandbox({ language, storage }: SandboxProps) {
   const [request, setRequest] = useState<ApiRequest>(() => ({ ...createEmptyRequest(), path: '/products' }))
   const [state, setState] = useState(() => loadSandbox(storage))
   const [response, setResponse] = useState<ApiResponse | null>(null)
+  const [sendCount, setSendCount] = useState(0)
 
   useEffect(() => {
     saveSandbox(storage, state)
@@ -37,6 +39,7 @@ export function Sandbox({ language, storage }: SandboxProps) {
     const result = runSandboxRequest(state, request)
     setState(result.state)
     setResponse(result.response)
+    setSendCount((count) => count + 1)
   }
 
   const reset = () => {
@@ -57,6 +60,7 @@ export function Sandbox({ language, storage }: SandboxProps) {
         </button>
       </section>
       <div className="workspace">
+        <PacketWire language={language} sendCount={sendCount} />
         <RequestBuilder
           language={language}
           request={request}
