@@ -27,14 +27,14 @@ describe('sandbox API', () => {
   it('keeps created resources for later requests', () => {
     const created = send('POST', '/products', { body: '{"name":"Mouse"}' })
     expect(created.response.status).toBe(201)
-    const read = send('GET', '/products/18', undefined, created.state)
-    expect(read.response.body).toMatchObject({ id: 18, name: 'Mouse' })
+    const read = send('GET', '/products/41', undefined, created.state)
+    expect(read.response.body).toMatchObject({ id: 41, name: 'Mouse' })
   })
 
   it('deletes an existing resource', () => {
     const result = send('DELETE', '/products/17')
     expect(result.response.status).toBe(204)
-    expect(result.state.products).toHaveLength(0)
+    expect(result.state.products).toHaveLength(5)
   })
 
   it('returns a token for the documented training credentials', () => {
@@ -63,6 +63,42 @@ describe('sandbox API', () => {
   it('accepts query parameters typed in the path', () => {
     expect(send('GET', '/products?name=Mouse').response.body).toEqual([])
     expect(send('GET', '/products?name=Mechanical%20Keyboard').response.body).toHaveLength(1)
+  })
+
+  it('filters by any field, by free text and by price range', () => {
+    const ids = (path: string) => (send('GET', path).response.body as { id: number }[]).map((item) => item.id)
+    expect(ids('/products?category=laptops')).toEqual([30, 33])
+    expect(ids('/orders?customerId=42&status=paid')).toEqual([904])
+    expect(ids('/users?q=ANA')).toEqual([42])
+    expect(ids('/products?minPrice=50&maxPrice=100')).toEqual([17, 21])
+    expect(ids('/products?unknown=1')).toEqual([])
+  })
+
+  it('sorts by numbers and by text, in both directions', () => {
+    const ids = (path: string) => (send('GET', path).response.body as { id: number }[]).map((item) => item.id)
+    expect(ids('/products?sort=price')).toEqual([40, 24, 21, 17, 30, 33])
+    expect(ids('/products?sort=price&order=desc').at(0)).toBe(33)
+    expect(ids('/orders?sort=createdAt&order=desc')).toEqual([906, 905, 904, 903])
+    expect(ids('/users?sort=name')).toEqual([42, 55, 61])
+  })
+
+  it('paginates only when asked, and reports the total', () => {
+    const body = send('GET', '/products?sort=price&page=2&limit=2').response.body
+    expect(body).toEqual({
+      items: [expect.objectContaining({ id: 21 }), expect.objectContaining({ id: 17 })],
+      page: 2,
+      limit: 2,
+      total: 6,
+    })
+    expect(send('GET', '/products?limit=2').response.body).toMatchObject({ page: 1, limit: 2, total: 6 })
+    expect(send('GET', '/products?page=9').response.body).toMatchObject({ items: [], page: 9, limit: 20 })
+    expect(Array.isArray(send('GET', '/products').response.body)).toBe(true)
+  })
+
+  it('rejects invalid values instead of guessing', () => {
+    for (const path of ['/products?page=0', '/products?limit=abc', '/products?page=1.5', '/products?order=up']) {
+      expect(send('GET', path).response.status).toBe(400)
+    }
   })
 
   it('declares the content type of responses with a body', () => {
@@ -126,7 +162,7 @@ describe('hidden routes', () => {
   })
 
   it('does not reveal the night shift when listing users, and loses the clue with user 42', () => {
-    expect(send('GET', '/users').response.body).toHaveLength(1)
+    expect(send('GET', '/users').response.body).toHaveLength(3)
     const deleted = send('DELETE', '/users/42').state
     expect(send('GET', '/users/42', undefined, deleted).response.status).toBe(404)
   })

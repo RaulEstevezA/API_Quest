@@ -14,6 +14,7 @@ import {
   type SandboxResult,
   type SandboxState,
 } from '../state'
+import { applyCollectionQuery } from './collection-query'
 
 /** Collections served by the API. */
 const RESOURCE_NAMES = ['users', 'products', 'orders'] as const
@@ -36,16 +37,18 @@ function isResourceName(value: string): value is ResourceName {
   return (RESOURCE_NAMES as readonly string[]).includes(value)
 }
 
-/** Reads one record, or filters the collection by query parameters using exact matches. */
+/** Reads one record, or the collection shaped by its query parameters. */
 const handleGet: MethodHandler = ({ state, request, resource, id }) => {
   const collection = state[resource]
   if (id !== null) {
     const item = collection.find((entry) => entry.id === id)
     return { state, response: item ? { status: 200, statusText: 'OK', body: item } : resourceNotFound() }
   }
-  const filters = request.query.filter((entry) => entry.key)
-  const items = collection.filter((item) => filters.every((entry) => String(item[entry.key]) === entry.value))
-  return { state, response: { status: 200, statusText: 'OK', body: items } }
+  const result = applyCollectionQuery(collection, request.query)
+  if ('error' in result) {
+    return { state, response: { status: 400, statusText: 'Bad Request', body: { error: result.error } } }
+  }
+  return { state, response: { status: 200, statusText: 'OK', body: result.body } }
 }
 
 /** Creates a record with the next free id. POST to an existing record is not allowed. */

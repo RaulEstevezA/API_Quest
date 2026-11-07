@@ -69,9 +69,25 @@ export interface SandboxLoadResult {
 export function createSandboxState(): SandboxState {
   return {
     version: SANDBOX_VERSION,
-    users: [{ id: 42, name: 'Ana Torres', email: 'ana@example.com' }],
-    products: [{ id: 17, name: 'Mechanical Keyboard', price: 89.99, stock: 15 }],
-    orders: [{ id: 903, customerId: 42, status: 'pending' }],
+    users: [
+      { id: 42, name: 'Ana Torres', email: 'ana@example.com' },
+      { id: 55, name: 'Luis Romero', email: 'luis@example.com' },
+      { id: 61, name: 'Marta Gil', email: 'marta@example.com' },
+    ],
+    products: [
+      { id: 17, name: 'Mechanical Keyboard', category: 'peripherals', price: 89.99, stock: 15 },
+      { id: 21, name: 'Webcam', category: 'peripherals', price: 59.9, stock: 8 },
+      { id: 24, name: 'USB-C Hub', category: 'accessories', price: 39.5, stock: 30 },
+      { id: 30, name: 'Travel Laptop', category: 'laptops', price: 899, stock: 4 },
+      { id: 33, name: 'Pro Laptop', category: 'laptops', price: 1450, stock: 2 },
+      { id: 40, name: 'Laptop Stand', category: 'accessories', price: 29, stock: 22 },
+    ],
+    orders: [
+      { id: 903, customerId: 42, status: 'pending', createdAt: '2026-11-02' },
+      { id: 904, customerId: 42, status: 'paid', createdAt: '2026-11-03' },
+      { id: 905, customerId: 55, status: 'paid', createdAt: '2026-11-05' },
+      { id: 906, customerId: 61, status: 'shipped', createdAt: '2026-11-06' },
+    ],
     profile: createSandboxProfile(),
     lights: 'on',
   }
