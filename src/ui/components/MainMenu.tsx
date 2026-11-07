@@ -20,8 +20,8 @@ interface MainMenuProps {
   storageAvailable: boolean
   /** `true` when saved progress could not be restored and was replaced. */
   progressWasReset: boolean
-  /** Opens the mission to continue with, or `null` when there is nothing to continue. */
-  onContinue: (() => void) | null
+  /** Label and action of the main way forward, or `null` for a player who has not started. */
+  primary: { label: string; open: () => void } | null
   onNavigate: (destination: MenuDestination) => void
   onHelp: () => void
   onReset: () => void
@@ -32,7 +32,7 @@ export function MainMenu({
   language,
   storageAvailable,
   progressWasReset,
-  onContinue,
+  primary,
   onNavigate,
   onHelp,
   onReset,
@@ -51,14 +51,14 @@ export function MainMenu({
       )}
 
       <nav className="main-menu" aria-label={text.label[language]}>
-        {onContinue && (
-          <button className="button button--primary main-menu__wide" type="button" onClick={onContinue}>
-            {text.continue[language]}
+        {primary && (
+          <button className="button button--primary main-menu__wide" type="button" onClick={primary.open}>
+            {primary.label}
           </button>
         )}
-        {/* There is one primary action per group: Missions is primary only when there is nothing to continue. */}
+        {/* There is one primary action per group: Missions is primary only when nothing comes before it. */}
         <button
-          className={`button main-menu__wide${onContinue ? '' : ' button--primary'}`}
+          className={`button main-menu__wide${primary ? '' : ' button--primary'}`}
           type="button"
           onClick={() => onNavigate('missions')}
         >

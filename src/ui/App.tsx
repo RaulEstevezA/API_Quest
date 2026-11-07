@@ -15,6 +15,7 @@ import { Backdrop } from './art/Backdrop'
 import { browserStorage } from './browser-storage'
 import { AchievementsScreen } from './components/AchievementsScreen'
 import { ApiDocs } from './components/ApiDocs'
+import { EndingScreen } from './components/EndingScreen'
 import { Header } from './components/Header'
 import { MainMenu } from './components/MainMenu'
 import { MissionMap } from './components/MissionMap'
@@ -60,9 +61,18 @@ export function App({ storage = browserStorage }: AppProps) {
 
   const openMission = (missionId: string) => setScreen({ name: 'mission', missionId })
 
+  const showEnding = () => setScreen({ name: 'ending' })
+
   // A first-time player has nothing to continue: Missions is the way in.
   const pendingMission = findFirstPendingMission(missions, progress)
-  const canContinue = pendingMission !== null && Object.keys(progress.completedMissions).length > 0
+  const completedCount = Object.keys(progress.completedMissions).length
+
+  const menuPrimary = () => {
+    if (completedCount === 0) return null
+    return pendingMission
+      ? { label: uiText.menu.continue[language], open: () => openMission(pendingMission) }
+      : { label: uiText.menu.ending[language], open: showEnding }
+  }
 
   /** Adds the way back to the screens that have nothing else in their bar. */
   const withMenuBar = (content: ReactNode) => (
@@ -89,7 +99,7 @@ export function App({ storage = browserStorage }: AppProps) {
             language={language}
             storageAvailable={storageAvailable}
             progressWasReset={progressWasReset}
-            onContinue={canContinue ? () => openMission(pendingMission) : null}
+            primary={menuPrimary()}
             onNavigate={(name) => setScreen({ name })}
             onHelp={onboarding.show}
             onReset={resetWithConfirmation}
@@ -103,6 +113,16 @@ export function App({ storage = browserStorage }: AppProps) {
         return withMenuBar(<Sandbox language={language} sandbox={sandbox} />)
       case 'achievements':
         return withMenuBar(<AchievementsScreen language={language} earned={progress.achievements} />)
+      case 'ending':
+        return (
+          <EndingScreen
+            language={language}
+            xp={progress.xp}
+            missions={completedCount}
+            achievements={progress.achievements.length}
+            onBack={backToMenu}
+          />
+        )
       case 'mission': {
         const mission = getMission(screen.missionId)
         // An unknown identifier cannot come from the catalogue, but it must not leave a blank page.
@@ -115,7 +135,11 @@ export function App({ storage = browserStorage }: AppProps) {
             language={language}
             onBack={() => setScreen({ name: 'missions' })}
             onComplete={(xp, attempts, hints) => recordCompletion(mission.id, xp, attempts, hints)}
-            onNext={nextId ? () => openMission(nextId) : null}
+            next={
+              nextId
+                ? { label: uiText.mission.next[language], open: () => openMission(nextId) }
+                : { label: uiText.mission.finish[language], open: showEnding }
+            }
           />
         )
       }

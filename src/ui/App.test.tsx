@@ -6,6 +6,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { missions } from '../content/missions'
 import { completeMission, createInitialProgress, PROGRESS_STORAGE_KEY, saveProgress } from '../core/progress'
 import { createSandboxState, SANDBOX_KEY, saveSandbox } from '../core/sandbox/state'
 import { createMemoryStorage, type StorageAdapter } from '../core/storage'
@@ -108,6 +109,19 @@ describe('initial menu', () => {
     expect(container.querySelector('nav .button')?.textContent).toBe('Misiones')
     expect(document.documentElement.lang).toBe('es')
     expect(storage.getItem('lang')).toBe('es')
+  })
+
+  it('offers the ending once every mission is complete', () => {
+    const storage = returningPlayerStorage()
+    const finished = missions.reduce(
+      (progress, mission) => completeMission(progress, mission.id, 100, 1, 0),
+      createInitialProgress(),
+    )
+    saveProgress(storage, finished)
+    renderApp(storage)
+    openFromMenu('Ending')
+    expect(container.querySelector('#ending-title')?.textContent).toBe('Shift complete')
+    expect(container.querySelector('header')).toBeNull()
   })
 
   it('opens the API reference in a window without leaving the mission', () => {

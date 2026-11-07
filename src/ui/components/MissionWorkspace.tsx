@@ -22,14 +22,20 @@ import { StatusLights } from './StatusLights'
 
 const text = uiText.mission
 
+/** Where the player goes after solving a mission. */
+export interface NextStep {
+  label: string
+  open: () => void
+}
+
 interface MissionWorkspaceProps {
   mission: Mission
   language: Language
   onBack: () => void
   /** Called once when the mission is solved, with the XP earned and the effort spent. */
   onComplete: (xp: number, attempts: number, hints: number) => void
-  /** Opens the mission to play next, or `null` when there is nothing left to offer. */
-  onNext: (() => void) | null
+  /** Label and action of the way forward after solving the mission. */
+  next: NextStep
 }
 
 /** Creates the request the mission starts from, which may come prefilled so it can be repaired. */
@@ -62,11 +68,11 @@ interface SolvedFeedbackProps {
   mission: Mission
   xp: number
   language: Language
-  onNext: (() => void) | null
+  next: NextStep
 }
 
 /** Renders the simulated response, the explanation, the XP and the way to the next mission. */
-function SolvedFeedback({ mission, xp, language, onNext }: SolvedFeedbackProps) {
+function SolvedFeedback({ mission, xp, language, next }: SolvedFeedbackProps) {
   // Some missions teach how to read an error, so a 4xx or 5xx can be the right outcome.
   const tone = mission.successResponse.status >= 400 ? 'feedback--expected-error' : 'feedback--success'
 
@@ -77,18 +83,16 @@ function SolvedFeedback({ mission, xp, language, onNext }: SolvedFeedbackProps) 
       <p>{mission.explanation[language]}</p>
       <div className="feedback__result">
         <p className="xp-earned">+{xp} XP</p>
-        {onNext && (
-          <button className="button button--primary" type="button" onClick={onNext}>
-            {text.next[language]} →
-          </button>
-        )}
+        <button className="button button--primary" type="button" onClick={next.open}>
+          {next.label} →
+        </button>
       </div>
     </div>
   )
 }
 
 /** Renders a mission and manages its attempts. */
-export function MissionWorkspace({ mission, language, onBack, onComplete, onNext }: MissionWorkspaceProps) {
+export function MissionWorkspace({ mission, language, onBack, onComplete, next }: MissionWorkspaceProps) {
   const [request, setRequest] = useState(() => initialRequest(mission))
   const [attempts, setAttempts] = useState(0)
   const [hintsUsed, setHintsUsed] = useState(0)
@@ -152,7 +156,7 @@ export function MissionWorkspace({ mission, language, onBack, onComplete, onNext
         <ResponsePane language={language}>
           {!solved && issues.length === 0 && <p className="empty-state">{text.noResponse[language]}</p>}
           {!solved && issues.length > 0 && <IssueFeedback issues={issues} language={language} />}
-          {solved && <SolvedFeedback mission={mission} xp={xp} language={language} onNext={onNext} />}
+          {solved && <SolvedFeedback mission={mission} xp={xp} language={language} next={next} />}
         </ResponsePane>
       </div>
 

@@ -50,6 +50,7 @@ export const uiText = {
     label: t('Main menu', 'Menú principal'),
     back: t('Menu', 'Menú'),
     continue: t('Continue', 'Continuar'),
+    ending: t('Ending', 'Final'),
     docs: t('Docs', 'Docs'),
     sandbox: t('Sandbox', 'Sandbox'),
     help: t('How to play', 'Cómo jugar'),
@@ -98,6 +99,7 @@ export const uiText = {
     notSolved: t('The request does not meet the objective yet:', 'La petición todavía no cumple el objetivo:'),
     whyItWorks: t('Why it works', 'Por qué funciona'),
     next: t('Next mission', 'Siguiente misión'),
+    finish: t('See the ending', 'Ver el final'),
     hints: t('Hints', 'Pistas'),
     showHint: t('Show a hint', 'Mostrar una pista'),
   },
@@ -152,6 +154,14 @@ export const uiText = {
     parameters: t('Parameters', 'Parámetros'),
     authentication: t('Authentication', 'Autenticación'),
     authenticationHint: t('Protected endpoints expect this header:', 'Los endpoints protegidos esperan este header:'),
+  },
+  ending: {
+    eyebrow: t('All 56 missions complete', 'Las 56 misiones completadas'),
+    title: t('Shift complete', 'Turno completado'),
+    paragraphs: {
+      en: ['You can now build, read and debug HTTP requests with confidence. The server room is yours.'],
+      es: ['Ya sabes construir, leer y depurar peticiones HTTP con soltura. La sala de servidores es tuya.'],
+    },
   },
   modal: {
     close: t('Close', 'Cerrar'),

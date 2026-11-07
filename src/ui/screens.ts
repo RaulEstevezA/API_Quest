@@ -10,7 +10,7 @@
 export type MenuDestination = 'missions' | 'docs' | 'sandbox' | 'achievements'
 
 /** The screen being shown. */
-export type Screen = { name: 'menu' } | { name: MenuDestination } | { name: 'mission'; missionId: string }
+export type Screen = { name: 'menu' | 'ending' } | { name: MenuDestination } | { name: 'mission'; missionId: string }
 
 /** Screen shown when the game starts. It must show the website header. */
 export const INITIAL_SCREEN: Screen = { name: 'menu' }
