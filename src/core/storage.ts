@@ -8,6 +8,14 @@
  * game keep running with its in-memory state for the lifetime of the tab.
  */
 
+/**
+ * Outcome of reading saved data:
+ * - `new`: nothing was saved, or storage is unavailable.
+ * - `restored`: the saved data was recovered.
+ * - `reset`: data existed but was unreadable or from another version, so it was replaced.
+ */
+export type LoadStatus = 'new' | 'restored' | 'reset'
+
 /** Minimal key-value store required by the game. Methods may throw. */
 export interface StorageAdapter {
   getItem(key: string): string | null

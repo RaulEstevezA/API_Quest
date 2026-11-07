@@ -9,7 +9,7 @@
  */
 
 import { isSecretAchievement, unlockedAchievements } from './achievements'
-import { safeRead, safeRemove, safeWrite, type StorageAdapter } from './storage'
+import { safeRead, safeRemove, safeWrite, type LoadStatus, type StorageAdapter } from './storage'
 
 /** Version of the saved format. Saved data with another version is not restored. */
 export const PROGRESS_VERSION = 1
@@ -34,18 +34,10 @@ export interface GameProgress {
   lastMissionId: string | null
 }
 
-/**
- * Outcome of reading saved progress:
- * - `new`: nothing was saved, or storage is unavailable.
- * - `restored`: the saved progress was recovered.
- * - `reset`: data existed but was unreadable or from another version, so it was replaced.
- */
-export type ProgressLoadStatus = 'new' | 'restored' | 'reset'
-
 /** Progress to play with and how it was obtained. */
 export interface ProgressLoadResult {
   progress: GameProgress
-  status: ProgressLoadStatus
+  status: LoadStatus
 }
 
 /** Creates the progress of a player who has not completed anything. */
