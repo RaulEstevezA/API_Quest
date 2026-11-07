@@ -129,6 +129,10 @@ export const uiText = {
     resetData: t('Reset data', 'Restablecer datos'),
     resetConfirmation: t('Reset all Sandbox data?', '¿Restablecer todos los datos del Sandbox?'),
     noResponse: t('Send a request to begin.', 'Envía una petición para empezar.'),
+    dataReset: t(
+      'Your saved Sandbox data could not be restored, so it has returned to its initial values.',
+      'No se han podido recuperar tus datos del Sandbox, así que han vuelto a los valores iniciales.',
+    ),
   },
   docs: {
     eyebrow: t('API reference', 'Referencia de la API'),

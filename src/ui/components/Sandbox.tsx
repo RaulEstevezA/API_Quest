@@ -1,15 +1,14 @@
 /**
- * Free-practice screen. It runs requests against the simulated API of
- * `core/sandbox.ts` and saves the resulting data, independently of game progress.
+ * Free-practice screen. It builds requests and shows the answers of the simulated API;
+ * the data and the effects of each request are managed by `use-sandbox`.
  */
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { uiText } from '../../content/ui-text'
-import { createEmptyRequest, type ApiRequest, type ApiResponse } from '../../core/http'
+import { createEmptyRequest, type ApiRequest } from '../../core/http'
 import type { RequestField } from '../../core/missions'
-import { createSandboxState, loadSandbox, runSandboxRequest, saveSandbox } from '../../core/sandbox'
-import type { StorageAdapter } from '../../core/storage'
 import type { Language } from '../i18n'
+import type { useSandbox } from '../use-sandbox'
 import { PacketWire } from './PacketWire'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
@@ -21,32 +20,16 @@ const ALL_FIELDS: RequestField[] = ['method', 'path', 'query', 'headers', 'body'
 
 interface SandboxProps {
   language: Language
-  storage: StorageAdapter
+  sandbox: Pick<ReturnType<typeof useSandbox>, 'dataWasReset' | 'response' | 'sendCount' | 'send' | 'reset'>
 }
 
-/** Renders the Sandbox and keeps its data saved. */
-export function Sandbox({ language, storage }: SandboxProps) {
+/** Renders the Sandbox. */
+export function Sandbox({ language, sandbox }: SandboxProps) {
   const [request, setRequest] = useState<ApiRequest>(() => ({ ...createEmptyRequest(), path: '/products' }))
-  const [state, setState] = useState(() => loadSandbox(storage))
-  const [response, setResponse] = useState<ApiResponse | null>(null)
-  const [sendCount, setSendCount] = useState(0)
+  const { dataWasReset, response, sendCount, send, reset } = sandbox
 
-  useEffect(() => {
-    saveSandbox(storage, state)
-  }, [storage, state])
-
-  const send = () => {
-    const result = runSandboxRequest(state, request)
-    setState(result.state)
-    setResponse(result.response)
-    setSendCount((count) => count + 1)
-  }
-
-  const reset = () => {
-    if (window.confirm(text.resetConfirmation[language])) {
-      setState(createSandboxState())
-      setResponse(null)
-    }
+  const resetWithConfirmation = () => {
+    if (window.confirm(text.resetConfirmation[language])) reset()
   }
 
   return (
@@ -55,10 +38,15 @@ export function Sandbox({ language, storage }: SandboxProps) {
         <p className="eyebrow">{text.eyebrow[language]}</p>
         <h1>Sandbox</h1>
         <p>{text.description[language]}</p>
-        <button className="button" type="button" onClick={reset}>
+        <button className="button" type="button" onClick={resetWithConfirmation}>
           {text.resetData[language]}
         </button>
       </section>
+      {dataWasReset && (
+        <p className="notice notice--warning" role="status">
+          {text.dataReset[language]}
+        </p>
+      )}
       <div className="workspace">
         <PacketWire language={language} sendCount={sendCount} />
         <RequestBuilder
@@ -67,7 +55,7 @@ export function Sandbox({ language, storage }: SandboxProps) {
           fields={ALL_FIELDS}
           solved={false}
           onChange={setRequest}
-          onSend={send}
+          onSend={() => send(request, language)}
         />
         <ResponsePane language={language}>
           {response ? (

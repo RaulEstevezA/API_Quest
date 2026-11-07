@@ -26,6 +26,7 @@ import { useLanguage } from './i18n'
 import { FIRST_MISSION_ID, INITIAL_SCREEN, type Screen } from './screens'
 import { useGameProgress } from './use-game-progress'
 import { useOnboarding } from './use-onboarding'
+import { useSandbox } from './use-sandbox'
 
 interface AppProps {
   /** Store for progress and preferences. Tests replace the browser one. */
@@ -35,7 +36,9 @@ interface AppProps {
 /** Renders the whole game. */
 export function App({ storage = browserStorage }: AppProps) {
   const { language, setLanguage } = useLanguage(storage)
-  const { progress, storageAvailable, progressWasReset, recordCompletion, reset } = useGameProgress(storage)
+  const { progress, storageAvailable, progressWasReset, recordCompletion, earnAchievement, reset } =
+    useGameProgress(storage)
+  const sandbox = useSandbox(storage, earnAchievement)
   const onboarding = useOnboarding(storage)
   const [screen, setScreen] = useState<Screen>(INITIAL_SCREEN)
 
@@ -97,7 +100,7 @@ export function App({ storage = browserStorage }: AppProps) {
       case 'docs':
         return withMenuBar(<ApiDocs language={language} />)
       case 'sandbox':
-        return withMenuBar(<Sandbox language={language} storage={storage} />)
+        return withMenuBar(<Sandbox language={language} sandbox={sandbox} />)
       case 'achievements':
         return withMenuBar(<AchievementsScreen language={language} earned={progress.achievements} />)
       case 'mission': {
