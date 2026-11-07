@@ -1,15 +1,18 @@
 /**
- * Initial menu of the game: overall progress, chapters and achievements. It shows
- * the state and reports the player's choices; the rules are in `core/progress.ts`.
+ * Initial menu of the game. It composes the title, the storage notices, the chapter
+ * route and the achievements, and reports the player's choices to `App`.
  */
 
 import { chapters } from '../../content/chapters'
-import { getChapterMissions, missions } from '../../content/missions'
+import { missions } from '../../content/missions'
 import { uiText } from '../../content/ui-text'
 import { achievements } from '../../core/achievements'
-import type { Chapter } from '../../core/missions'
-import { isChapterUnlocked, type GameProgress } from '../../core/progress'
+import type { GameProgress } from '../../core/progress'
+import { medalEmblem } from '../art/emblems'
+import { PixelArt } from '../art/PixelArt'
 import type { Language } from '../i18n'
+import { ChapterCard } from './ChapterCard'
+import { TitleScreen } from './TitleScreen'
 
 const text = uiText.dashboard
 
@@ -24,56 +27,6 @@ interface DashboardProps {
   onReset: () => void
 }
 
-interface ChapterCardProps {
-  chapter: Chapter
-  language: Language
-  completedMissions: GameProgress['completedMissions']
-  onOpenMission: (id: string) => void
-}
-
-/** Renders a chapter with its missions, or its locked state. */
-function ChapterCard({ chapter, language, completedMissions, onOpenMission }: ChapterCardProps) {
-  const chapterMissions = getChapterMissions(chapter.id)
-  const previousMissions = getChapterMissions(chapter.id - 1).map((mission) => mission.id)
-  const unlocked = isChapterUnlocked(chapter.id, previousMissions, { completedMissions })
-  const completedCount = chapterMissions.filter((mission) => completedMissions[mission.id]).length
-
-  return (
-    <article className={`chapter-card${unlocked ? '' : ' chapter-card--locked'}`}>
-      <div className="chapter-card__heading">
-        <span className="chapter-card__number">{String(chapter.id).padStart(2, '0')}</span>
-        <div>
-          <h3>{chapter.title[language]}</h3>
-          <p>{chapter.description[language]}</p>
-        </div>
-        <span className="badge">
-          {unlocked ? `${completedCount} / ${chapterMissions.length}` : text.locked[language]}
-        </span>
-      </div>
-      {unlocked && chapterMissions.length > 0 && (
-        <ol className="mission-list">
-          {chapterMissions.map((mission) => {
-            const done = completedMissions[mission.id]
-            return (
-              <li key={mission.id}>
-                <button type="button" onClick={() => onOpenMission(mission.id)}>
-                  <span>
-                    {mission.order}. {mission.title[language]}
-                  </span>
-                  <span className={done ? 'status status--success' : 'status'}>
-                    {done ? `${done.bestXp} XP` : text.pending[language]}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ol>
-      )}
-      {unlocked && chapterMissions.length === 0 && <p className="empty-state">{text.chapterInPreparation[language]}</p>}
-    </article>
-  )
-}
-
 /** Renders the initial menu. */
 export function Dashboard({
   language,
@@ -83,40 +36,14 @@ export function Dashboard({
   onOpenMission,
   onReset,
 }: DashboardProps) {
-  const completed = Object.keys(progress.completedMissions).length
-
   return (
     <>
-      <section className="hero window" aria-labelledby="app-title">
-        <div className="hero__heading">
-          <div className="hero__brand">
-            <img
-              className="game-logo"
-              src={`${import.meta.env.BASE_URL}api-quest-logo.png`}
-              alt=""
-              width="72"
-              height="72"
-            />
-            <div>
-              <h1 id="app-title">API Quest</h1>
-              <p className="subtitle">{text.subtitle[language]}</p>
-            </div>
-          </div>
-          <dl className="progress-summary">
-            <div>
-              <dt>XP</dt>
-              <dd>{progress.xp}</dd>
-            </div>
-            <div>
-              <dt>{text.missions[language]}</dt>
-              <dd>
-                {completed} / {missions.length}
-              </dd>
-            </div>
-          </dl>
-        </div>
-        <p className="hero__description">{text.description[language]}</p>
-      </section>
+      <TitleScreen
+        language={language}
+        xp={progress.xp}
+        completed={Object.keys(progress.completedMissions).length}
+        total={missions.length}
+      />
 
       {!storageAvailable && (
         <p className="notice notice--warning" role="status">
@@ -167,6 +94,7 @@ export function Dashboard({
             const unlocked = progress.achievements.includes(achievement.id)
             return (
               <article className={`achievement${unlocked ? ' achievement--unlocked' : ''}`} key={achievement.id}>
+                <PixelArt rows={medalEmblem} />
                 <span className="achievement__state">{(unlocked ? text.earned : text.pending)[language]}</span>
                 <h3>{achievement.title[language]}</h3>
                 <p>{achievement.description[language]}</p>

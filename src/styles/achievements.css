@@ -1,0 +1,65 @@
+/*
+ * Achievement badges of the initial menu. The earned state is also stated in text, so
+ * the difference does not depend on the colour of the medal.
+ */
+
+.achievement-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-12);
+}
+
+.achievement {
+  --chapter-accent: var(--muted);
+  padding: var(--space-12);
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0 var(--space-12);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(10, 21, 18, 0.7);
+}
+
+.achievement svg {
+  grid-row: span 3;
+  width: 44px;
+  height: 44px;
+  opacity: 0.45;
+}
+
+.achievement h3 {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.achievement p {
+  margin: var(--space-4) 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.achievement__state {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.achievement--unlocked {
+  --chapter-accent: var(--warning);
+  border-color: var(--warning);
+  background: var(--warning-soft);
+  box-shadow: 0 0 18px rgba(255, 194, 75, 0.14);
+}
+
+.achievement--unlocked svg {
+  opacity: 1;
+}
+
+.achievement--unlocked .achievement__state {
+  color: var(--warning);
+}
