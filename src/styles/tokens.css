@@ -1,39 +1,50 @@
 /*
- * Design tokens: a copy of the values defined in personal_web_style/tokens. Use these
- * variables rather than literal values, and update them there first.
+ * Design tokens of the game. Games have artistic freedom in personal_web_style, so
+ * this palette comes from the game logo: phosphor green on a near-black background,
+ * like the status lights of a server room at night. Use these variables rather than
+ * literal values. To restyle a chapter, change its accent in chapter-themes.css.
  */
 
 :root {
   color-scheme: dark;
-  --page-bg: #0d1117;
-  --surface: #161b22;
-  --surface-raised: #21262d;
-  --border: #30363d;
-  --text: #e6edf3;
-  --btn-text: #c9d1d9;
-  --muted: #8b949e;
-  --accent: #58a6ff;
-  --accent-text: #79c0ff;
-  --accent-soft: #1a2740;
-  --on-accent: #0d1117;
-  --success: #3fb950;
-  --success-soft: #12261e;
-  --warning: #d29922;
-  --warning-soft: #2b2111;
-  --danger: #f85149;
-  --danger-soft: #25171c; /* Error box: opaque equivalent of --danger at 10% over --page-bg. */
-  --hover: rgba(110, 118, 129, 0.1);
-  --backdrop: rgba(0, 0, 0, 0.85);
-  --selection: rgba(56, 139, 253, 0.35);
-  --syntax-keyword: #ff7b72;
-  --syntax-string: #a5d6ff;
-  --syntax-constant: #79c0ff;
-  --syntax-property: #7ee787;
-  --syntax-type: #ffa657;
-  --syntax-function: #d2a8ff;
-  --syntax-comment: #8b949e;
+
+  /* Surfaces, from the back of the page to the front. */
+  --page-bg: #050c0a;
+  --surface: #0a1512;
+  --surface-raised: #12231d;
+  --surface-sunken: #030806;
+  --border: #24443a;
+
+  /* Text. All of these meet AA contrast on every surface above. */
+  --text: #e8fff4;
+  --btn-text: #c9eadc;
+  --muted: #90b3a5;
+
+  /* Identity: the mint arrow and the lime method pill of the logo. */
+  --accent: #3dffa2;
+  --accent-text: #7dffc2;
+  --accent-soft: #0c2d21;
+  --lime: #a6e82f;
+  --on-accent: #03140d;
+
+  /* States. Each one is always paired with text, never shown through colour alone. */
+  --success: #5dff9e;
+  --success-soft: #0d2a1c;
+  --warning: #ffc24b;
+  --warning-soft: #2b2210;
+  --danger: #ff7a6e;
+  --danger-soft: #2c1517;
+
+  --hover: rgba(61, 255, 162, 0.08);
+  --backdrop: rgba(1, 6, 4, 0.88);
+  --selection: rgba(61, 255, 162, 0.3);
+
+  /* Current chapter. Chapter themes override it for their subtree. */
+  --chapter-accent: var(--accent);
+
   --sans: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
   --space-4: 4px;
   --space-8: 8px;
   --space-12: 12px;
@@ -43,13 +54,17 @@
   --space-32: 32px;
   --space-36: 36px;
   --space-40: 40px;
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius: 8px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+
+  /* Tight corners and hard shadows give panels the look of hardware rather than of cards. */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
   --radius-pill: 999px;
-  --window-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.04);
-  --modal-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  --hard-shadow: 4px 4px 0 #010403;
+  --window-shadow: 6px 6px 0 #010403;
+  --modal-shadow: 0 0 0 1px var(--accent-soft), 0 24px 80px #000;
+
   --transition-fast: 0.15s ease;
 }
