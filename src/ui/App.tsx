@@ -124,7 +124,7 @@ export function App({ storage = browserStorage }: AppProps) {
 
   return (
     <>
-      <Backdrop prominent={screen.name === 'menu'} />
+      <Backdrop prominent={screen.name === 'menu'} lights={sandbox.lights} alarm={sandbox.alarm} />
       {screen.name === 'menu' && <Header language={language} onLanguageChange={setLanguage} />}
       <main className="app-shell">{renderScreen()}</main>
       <OnboardingDialog

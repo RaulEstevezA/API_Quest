@@ -103,3 +103,68 @@
     opacity: 0.15;
   }
 }
+
+/* Lights of the room, controlled from the Sandbox. */
+
+.backdrop--lights-off .backdrop__light {
+  opacity: 0.06;
+  animation: none;
+}
+
+.backdrop--lights-off .backdrop__packet {
+  display: none;
+}
+
+.backdrop--lights-red .backdrop__light {
+  fill: var(--danger);
+}
+
+.backdrop--alarm {
+  opacity: 0.85;
+}
+
+.backdrop--alarm .backdrop__light {
+  fill: var(--danger);
+  opacity: 1;
+  animation: backdrop-blink 0.5s steps(2, jump-none) infinite;
+}
+
+/* Brief flash over the page when the lights change. It is invisible once it ends. */
+.room-effect {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.room-effect--off {
+  background: #000;
+  animation: room-flash 1.8s ease-out;
+}
+
+.room-effect--red {
+  background: var(--danger);
+  animation: room-flash 0.9s ease-out;
+}
+
+.room-alarm {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  box-shadow: inset 0 0 140px rgba(255, 70, 60, 0.6);
+  pointer-events: none;
+  animation: room-alarm-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes room-flash {
+  from {
+    opacity: 0.85;
+  }
+}
+
+@keyframes room-alarm-pulse {
+  to {
+    box-shadow: inset 0 0 60px rgba(255, 70, 60, 0.25);
+  }
+}

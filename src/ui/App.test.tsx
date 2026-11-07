@@ -7,6 +7,7 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { completeMission, createInitialProgress, PROGRESS_STORAGE_KEY, saveProgress } from '../core/progress'
+import { createSandboxState, SANDBOX_KEY, saveSandbox } from '../core/sandbox/state'
 import { createMemoryStorage, type StorageAdapter } from '../core/storage'
 import { App } from './App'
 
@@ -117,6 +118,21 @@ describe('initial menu', () => {
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled()
     expect(container.querySelector('.workspace')).not.toBeNull()
     expect(container.querySelector('dialog.modal--wide .docs__grid')).not.toBeNull()
+  })
+
+  it('shows the lights saved by the Sandbox in the background', () => {
+    const storage = returningPlayerStorage()
+    saveSandbox(storage, { ...createSandboxState(), lights: 'off' })
+    renderApp(storage)
+    expect(container.querySelector('.backdrop--lights-off')).not.toBeNull()
+  })
+
+  it('warns on the Sandbox screen when its saved data could not be restored', () => {
+    const storage = returningPlayerStorage()
+    storage.setItem(SANDBOX_KEY, '{not json')
+    renderApp(storage)
+    openFromMenu('Sandbox')
+    expect(container.querySelector('[role="status"]')?.textContent).toContain('could not be restored')
   })
 
   it('hides a secret achievement until it is earned', () => {
