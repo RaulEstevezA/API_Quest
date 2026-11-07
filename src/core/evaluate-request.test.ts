@@ -1,7 +1,10 @@
+/** Tests of the mission validator. */
+
 import { describe, expect, it } from 'vitest'
 import type { Mission } from './missions'
 import { evaluateRequest } from './evaluate-request'
 
+/** Mission that uses every field, so that each rule has something to check. */
 const mission: Mission = {
   id: 'test',
   chapter: 1,
