@@ -1,9 +1,9 @@
 /*
- * Mission and Sandbox screens: toolbar, brief, workspace panes and hints. The whole
+ * Mission and Sandbox screens: top bar, brief, workspace panes and hints. The whole
  * screen takes the colour of its chapter through --chapter-accent.
  */
 
-.mission-toolbar {
+.screen-bar {
   min-height: 48px;
   margin-bottom: var(--space-12);
   display: flex;
@@ -15,11 +15,11 @@
   font-size: 0.78rem;
 }
 
-.mission-toolbar .button {
+.screen-bar .button {
   margin-right: auto;
 }
 
-.mission-toolbar span {
+.screen-bar span {
   padding: 3px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -194,7 +194,7 @@
 }
 
 @media (max-width: 600px) {
-  .mission-toolbar .button {
+  .screen-bar .button {
     width: 100%;
     margin: 0;
   }

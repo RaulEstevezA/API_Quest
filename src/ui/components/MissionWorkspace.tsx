@@ -15,6 +15,7 @@ import type { Language } from '../i18n'
 import { PacketWire } from './PacketWire'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
+import { ScreenBar } from './ScreenBar'
 
 const text = uiText.mission
 
@@ -91,16 +92,13 @@ export function MissionWorkspace({ mission, language, onBack, onComplete }: Miss
 
   return (
     <div className={`chapter-theme chapter-theme--${mission.chapter}`}>
-      <div className="mission-toolbar">
-        <button className="button" type="button" onClick={onBack}>
-          ← {text.backToChapters[language]}
-        </button>
+      <ScreenBar backLabel={text.backToChapters[language]} onBack={onBack}>
         <span>{mission.service}</span>
         <span>
           {text.attempts[language]}: {attempts}
         </span>
         <span>{xp} XP</span>
-      </div>
+      </ScreenBar>
 
       <section className="mission-brief mission-brief--ticket window">
         <div className="mission-brief__emblem">
