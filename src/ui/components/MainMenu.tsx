@@ -1,6 +1,7 @@
 /**
- * Main menu, the first screen of the game. It holds the title, the storage notices and the buttons that lead to everything else. To add a screen
- * to the menu, add it to `DESTINATIONS` and to `MenuDestination` in `screens.ts`.
+ * Main menu, the first screen of the game. It holds the title, the storage notices and
+ * the buttons that lead to everything else. To add a screen to the menu, add it to
+ * `DESTINATIONS` and to `MenuDestination` in `screens.ts`.
  */
 
 import { uiText } from '../../content/ui-text'

@@ -143,10 +143,12 @@ export const uiText = {
     authentication: t('Authentication', 'Autenticación'),
     authenticationHint: t('Protected endpoints expect this header:', 'Los endpoints protegidos esperan este header:'),
   },
+  modal: {
+    close: t('Close', 'Cerrar'),
+  },
   onboarding: {
     eyebrow: t('Before you start', 'Antes de empezar'),
     title: t('How API Quest works', 'Cómo funciona API Quest'),
-    close: t('Close', 'Cerrar'),
     intro: t(
       'You will learn REST APIs by solving tasks similar to those handled by a development team. No previous experience is required: the first missions guide you step by step.',
       'Aprenderás APIs REST resolviendo tareas similares a las que recibe un equipo de desarrollo. No necesitas experiencia previa: las primeras misiones te guían paso a paso.',
