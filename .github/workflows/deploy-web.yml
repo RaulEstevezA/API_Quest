@@ -1,8 +1,12 @@
+# Builds the game and publishes it in the personal website repository, under
+# /games/API_Quest/. Requires the PORTFOLIO_DEPLOY_TOKEN secret, with write access
+# to that repository only. See PUBLISHING.md in personal_web_style.
 name: Deploy game
 
 on:
   push:
     branches: [main]
+    # Only changes that affect the published app trigger a deployment.
     paths:
       - 'src/**'
       - 'public/**'
@@ -14,6 +18,8 @@ on:
       - '.github/workflows/deploy-web.yml'
   workflow_dispatch:
 
+# Deployments run one after another and are never cancelled, so that a push to the
+# website repository cannot be interrupted halfway.
 concurrency:
   group: deploy-api-quest
   cancel-in-progress: false
@@ -52,6 +58,7 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+      # The published HTML must contain the analytics beacon exactly once.
       - name: Verify analytics
         run: test "$(grep -R -c 'static.cloudflareinsights.com/beacon.min.js' dist/*.html)" = "1"
       - name: Checkout website
@@ -61,6 +68,7 @@ jobs:
           ref: main
           token: ${{ secrets.PORTFOLIO_DEPLOY_TOKEN }}
           path: site
+      # --delete removes files from earlier builds that no longer exist in dist/.
       - name: Copy build into website
         run: |
           mkdir -p "site/${GAME_PATH}"
@@ -76,6 +84,8 @@ jobs:
             exit 0
           fi
           git commit -m "deploy: update ${GAME_PATH} from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+          # Other projects publish to the same repository, so a push can be rejected
+          # by a concurrent deployment. Rebase and retry before giving up.
           for attempt in 1 2 3; do
             git pull --rebase origin main
             if git push origin HEAD:main; then exit 0; fi

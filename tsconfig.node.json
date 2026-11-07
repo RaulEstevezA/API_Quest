@@ -1,3 +1,4 @@
+// Type-checking of the build configuration, which runs in Node instead of the browser.
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
