@@ -23,9 +23,7 @@ const DEFAULT_LIMIT = 20
 const specialFilters: Record<string, Filter> = {
   // Free-text search: case-insensitive, over every text field of the record.
   q: (item, value) =>
-    Object.values(item).some(
-      (field) => typeof field === 'string' && field.toLowerCase().includes(value.toLowerCase()),
-    ),
+    Object.values(item).some((field) => typeof field === 'string' && field.toLowerCase().includes(value.toLowerCase())),
   minPrice: (item, value) => Number(item.price) >= Number(value),
   maxPrice: (item, value) => Number(item.price) <= Number(value),
 }
