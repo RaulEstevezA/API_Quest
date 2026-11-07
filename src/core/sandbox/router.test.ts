@@ -1,4 +1,4 @@
-/** Tests of the simulated Sandbox API. */
+/** Tests of the simulated Sandbox API, including its hidden routes. */
 
 import { describe, expect, it } from 'vitest'
 import { createEmptyRequest, type ApiRequest, type HttpMethod } from '../http'
@@ -108,6 +108,41 @@ describe('protected endpoints', () => {
   })
 })
 
+describe('hidden routes', () => {
+  it('leads from user 42 to the server room, in the language of the player', () => {
+    const first = runSandboxRequest(createSandboxState(), request('GET', '/users/42'), 'es').response.body
+    expect(first).toMatchObject({ name: 'Ana Torres', note: 'Alguien sigue trabajando en /users/0' })
+    expect(send('GET', '/users/0').response.body).toMatchObject({ note: 'They left the lights on. See /server-room' })
+    expect(send('GET', '/server-room').response.body).toMatchObject({ lights: 'on' })
+  })
+
+  it('does not reveal the night shift when listing users, and loses the clue with user 42', () => {
+    expect(send('GET', '/users').response.body).toHaveLength(1)
+    const deleted = send('DELETE', '/users/42').state
+    expect(send('GET', '/users/42', undefined, deleted).response.status).toBe(404)
+  })
+
+  it('earns the achievement only when the lights go off', () => {
+    const off = send('PATCH', '/server-room', { body: '{"lights":"off"}' })
+    expect(off.earnedAchievement).toBe('night-shift')
+    expect(off.state.lights).toBe('off')
+    const red = send('PATCH', '/server-room', { body: '{"lights":"red"}' })
+    expect(red.earnedAchievement).toBeUndefined()
+    expect(red.state.lights).toBe('red')
+    expect(send('PATCH', '/server-room', { body: '{"lights":"disco"}' }).response.status).toBe(400)
+    expect(send('DELETE', '/server-room').response.status).toBe(405)
+  })
+
+  it('answers the teapot joke and pretends to delete production', () => {
+    expect(send('GET', '/coffee').response).toMatchObject({ status: 418, statusText: "I'm a teapot" })
+    const production = send('DELETE', '/production')
+    expect(production.response.body).toMatchObject({ status: 'deleted' })
+    expect(production.alarmFollowUp?.body).toMatchObject({ rollback: 'completed' })
+    expect(production.state).toEqual(createSandboxState())
+    expect(send('GET', '/production').response.status).toBe(404)
+  })
+})
+
 describe('sandbox persistence', () => {
   it('round-trips and tells a first visit apart from damaged data', () => {
     const storage = createMemoryStorage()
@@ -126,5 +161,6 @@ describe('sandbox persistence', () => {
     const { state, status } = loadSandbox(storage)
     expect(status).toBe('restored')
     expect(send('GET', '/profile', DEVELOPER, state).response.status).toBe(200)
+    expect(send('GET', '/server-room', undefined, state).response.body).toMatchObject({ lights: 'on' })
   })
 })
