@@ -13,6 +13,7 @@
 @import './response.css';
 @import './mission.css';
 @import './request-builder.css';
+@import './docs.css';
 @import './achievements.css';
 
 .icon-button {
@@ -21,57 +22,6 @@
   border-radius: var(--radius-sm);
   background: var(--surface-raised);
   cursor: pointer;
-}
-/* Docs screen. */
-.docs__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-16);
-  margin-top: var(--space-32);
-}
-.docs__group {
-  margin-top: var(--space-16);
-  padding: var(--space-20);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--page-bg);
-}
-.docs__group h2 {
-  margin: 0 0 var(--space-12);
-  font-size: 1.125rem;
-}
-.docs__group p {
-  color: var(--muted);
-}
-.docs__group ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.docs__group li {
-  padding: var(--space-8) 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-12);
-  border-top: 1px solid var(--border);
-}
-.docs__group pre {
-  padding: var(--space-16);
-  overflow: auto;
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  font: 13px/1.6 var(--mono);
-}
-.docs__table {
-  display: grid;
-  overflow: auto;
-}
-.docs__table > div {
-  min-width: 560px;
-  padding: var(--space-8);
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  border-top: 1px solid var(--border);
 }
 /* Onboarding dialog. Its header and actions stay visible while the content scrolls. */
 .onboarding-dialog {
