@@ -1,13 +1,14 @@
 /**
- * A stop on the chapter route of the initial menu: its emblem, its progress and its
- * missions. Whether it is unlocked is decided by `core/progress.ts`.
+ * A stop on the chapter route: its illustration, its progress and its missions. A locked
+ * chapter shows a padlock, so that its illustration stays a surprise. Whether it is unlocked is decided by `core/progress.ts`.
  */
 
 import { getChapterMissions } from '../../content/missions'
 import { uiText } from '../../content/ui-text'
 import type { Chapter } from '../../core/missions'
 import { isChapterUnlocked, type GameProgress } from '../../core/progress'
-import { chapterEmblems, lockEmblem } from '../art/emblems'
+import { chapterArtUrl } from '../art/chapter-art'
+import { lockEmblem } from '../art/emblems'
 import { PixelArt } from '../art/PixelArt'
 import type { Language } from '../i18n'
 
@@ -32,8 +33,19 @@ export function ChapterCard({ chapter, language, completedMissions, onOpenMissio
     <article
       className={`chapter-card chapter-theme chapter-theme--${chapter.id}${unlocked ? '' : ' chapter-card--locked'}`}
     >
-      <div className="chapter-card__emblem">
-        <PixelArt rows={unlocked ? chapterEmblems[chapter.id] : lockEmblem} />
+      <div className="chapter-card__media">
+        {unlocked ? (
+          <img
+            className="chapter-card__art"
+            src={chapterArtUrl(chapter.id)}
+            alt=""
+            width="1280"
+            height="720"
+            loading="lazy"
+          />
+        ) : (
+          <PixelArt rows={lockEmblem} />
+        )}
         <span className="chapter-card__number">{String(chapter.id).padStart(2, '0')}</span>
       </div>
 

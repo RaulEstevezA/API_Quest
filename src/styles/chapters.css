@@ -36,7 +36,7 @@
 .chapter-card {
   position: relative;
   display: grid;
-  grid-template-columns: 104px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: var(--space-20);
   padding: var(--space-20);
   border: 1px solid color-mix(in srgb, var(--chapter-accent) 38%, var(--border));
@@ -45,12 +45,12 @@
   box-shadow: var(--window-shadow);
 }
 
-/* Connector to the next stop. It starts at the centre of the emblem column. */
+/* Connector to the next stop. It starts at the centre of the illustration column. */
 .chapter-card:not(:last-child)::after {
   content: '';
   position: absolute;
   top: 100%;
-  left: 71px;
+  left: 139px;
   height: calc(var(--space-20) + 2px);
   border-left: 3px dashed var(--chapter-accent);
   opacity: 0.6;
@@ -62,28 +62,40 @@
   box-shadow: none;
 }
 
-.chapter-card__emblem {
+.chapter-card__media {
+  position: relative;
   align-self: start;
-  padding: var(--space-12);
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: radial-gradient(circle, color-mix(in srgb, var(--chapter-accent) 16%, transparent), transparent 72%),
-    var(--surface-sunken);
-  text-align: center;
+  background: var(--surface-sunken);
 }
 
-.chapter-card__emblem svg {
+.chapter-card__media svg {
+  width: 64px;
+  height: 64px;
+}
+
+.chapter-card__art {
   display: block;
   width: 100%;
-  aspect-ratio: 1;
+  height: 100%;
+  object-fit: cover;
 }
 
 .chapter-card__number {
-  display: block;
-  margin-top: var(--space-4);
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-sunken);
   color: var(--chapter-accent);
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 800;
 }
 
@@ -214,28 +226,18 @@
   }
 
   .chapter-card {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-12);
     padding: var(--space-12);
   }
 
   .chapter-card:not(:last-child)::after {
-    left: 42px;
-  }
-
-  .chapter-card__emblem {
-    padding: var(--space-8);
+    left: 50%;
   }
 
   .chapter-card__heading {
     flex-direction: column;
     gap: var(--space-8);
-  }
-
-  .chapter-card__segments,
-  .mission-list {
-    grid-column: 1 / -1;
-    margin-left: -76px;
   }
 
   .mission-list {
