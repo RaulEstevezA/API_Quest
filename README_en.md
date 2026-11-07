@@ -57,6 +57,8 @@ Each kind of change has one place to go:
 
 All visible text is a `LocalizedText` value, read as `text[language]`. Interface texts are in `content/ui-text.ts`.
 
+The art is code rather than image files. `ui/art/` draws the pixel emblems from text grids and generates the server room scene, and `styles/chapter-themes.css` sets the colour of each chapter.
+
 ## Suggestions
 
 Report an issue or suggestion at [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).

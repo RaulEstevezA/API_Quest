@@ -57,6 +57,8 @@ Cada tipo de cambio tiene un único lugar:
 
 Todo el texto visible es un valor `LocalizedText`, que se lee como `text[language]`. Los textos de la interfaz están en `content/ui-text.ts`.
 
+El arte es código, no archivos de imagen. `ui/art/` dibuja los emblemas pixelados a partir de rejillas de texto y genera la escena de la sala de servidores, y `styles/chapter-themes.css` define el color de cada capítulo.
+
 ## Sugerencias
 
 Puedes comunicar un error o sugerencia en [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
