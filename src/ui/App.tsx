@@ -1,21 +1,26 @@
 /**
  * Composition root of the interface: owns the current screen, injects the storage
  * and connects the screens to the state hooks. Game rules belong in `core/`.
+ *
+ * The website header appears only on the main menu. Every other screen is immersive,
+ * and its only navigation is the way back in its `ScreenBar`.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { getMission } from '../content/missions'
 import { uiText } from '../content/ui-text'
 import type { StorageAdapter } from '../core/storage'
 import { Backdrop } from './art/Backdrop'
 import { browserStorage } from './browser-storage'
+import { AchievementsScreen } from './components/AchievementsScreen'
 import { ApiDocs } from './components/ApiDocs'
-import { Dashboard } from './components/Dashboard'
-import { GameNav } from './components/GameNav'
 import { Header } from './components/Header'
+import { MainMenu } from './components/MainMenu'
+import { MissionMap } from './components/MissionMap'
 import { MissionWorkspace } from './components/MissionWorkspace'
 import { OnboardingDialog } from './components/OnboardingDialog'
 import { Sandbox } from './components/Sandbox'
+import { ScreenBar } from './components/ScreenBar'
 import { useLanguage } from './i18n'
 import { FIRST_MISSION_ID, INITIAL_SCREEN, type Screen } from './screens'
 import { useGameProgress } from './use-game-progress'
@@ -47,29 +52,51 @@ export function App({ storage = browserStorage }: AppProps) {
     setScreen({ name: 'mission', missionId: FIRST_MISSION_ID })
   }
 
-  const renderDashboard = () => (
-    <Dashboard
+  const backToMenu = () => setScreen({ name: 'menu' })
+
+  /** Adds the way back to the screens that have nothing else in their bar. */
+  const withMenuBar = (content: ReactNode) => (
+    <>
+      <ScreenBar backLabel={uiText.menu.back[language]} onBack={backToMenu} />
+      {content}
+    </>
+  )
+
+  const renderMissionMap = () => (
+    <MissionMap
       language={language}
       progress={progress}
-      storageAvailable={storageAvailable}
-      progressWasReset={progressWasReset}
+      onBack={backToMenu}
       onOpenMission={(missionId) => setScreen({ name: 'mission', missionId })}
-      onReset={resetWithConfirmation}
     />
   )
 
   const renderScreen = () => {
     switch (screen.name) {
+      case 'menu':
+        return (
+          <MainMenu
+            language={language}
+            progress={progress}
+            storageAvailable={storageAvailable}
+            progressWasReset={progressWasReset}
+            onNavigate={(name) => setScreen({ name })}
+            onHelp={onboarding.show}
+            onReset={resetWithConfirmation}
+          />
+        )
       case 'missions':
-        return renderDashboard()
+        return renderMissionMap()
       case 'docs':
-        return <ApiDocs language={language} />
+        return withMenuBar(<ApiDocs language={language} />)
       case 'sandbox':
-        return <Sandbox language={language} storage={storage} />
+        return withMenuBar(<Sandbox language={language} storage={storage} />)
+      case 'achievements':
+        return withMenuBar(<AchievementsScreen language={language} earned={progress.achievements} />)
       case 'mission': {
         const mission = getMission(screen.missionId)
         // An unknown identifier cannot come from the catalogue, but it must not leave a blank page.
-        if (!mission) return renderDashboard()
+        if (!mission) return renderMissionMap()
         return (
           <MissionWorkspace
             key={mission.id}
@@ -85,14 +112,8 @@ export function App({ storage = browserStorage }: AppProps) {
 
   return (
     <>
-      <Backdrop prominent={screen.name === 'missions'} />
-      <Header language={language} onLanguageChange={setLanguage} />
-      <GameNav
-        language={language}
-        current={screen.name}
-        onNavigate={(name) => setScreen({ name })}
-        onHelp={onboarding.show}
-      />
+      <Backdrop prominent={screen.name === 'menu'} />
+      {screen.name === 'menu' && <Header language={language} onLanguageChange={setLanguage} />}
       <main className="app-shell">{renderScreen()}</main>
       <OnboardingDialog
         language={language}

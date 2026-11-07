@@ -1,8 +1,9 @@
 /**
- * Title of the initial menu: the logo, the name of the game and the overall progress,
- * surrounded by the requests and responses that travel through the server room.
+ * Title of the main menu: the logo and the name of the game, surrounded by the requests
+ * and responses that travel through the server room. The menu goes inside as children.
  */
 
+import type { ReactNode } from 'react'
 import { uiText } from '../../content/ui-text'
 import type { Language } from '../i18n'
 
@@ -23,13 +24,11 @@ const TRAFFIC = [
 
 interface TitleScreenProps {
   language: Language
-  xp: number
-  completed: number
-  total: number
+  children: ReactNode
 }
 
-/** Renders the title and the progress summary. */
-export function TitleScreen({ language, xp, completed, total }: TitleScreenProps) {
+/** Renders the title and whatever the main menu places below it. */
+export function TitleScreen({ language, children }: TitleScreenProps) {
   return (
     <section className="title-screen" aria-labelledby="app-title">
       <ul className="title-screen__traffic" aria-hidden="true">
@@ -52,22 +51,7 @@ export function TitleScreen({ language, xp, completed, total }: TitleScreenProps
       </h1>
       <p className="title-screen__subtitle">{text.subtitle[language]}</p>
       <p className="title-screen__description">{text.description[language]}</p>
-
-      <dl className="progress-summary">
-        <div>
-          <dt>XP</dt>
-          <dd>{xp}</dd>
-        </div>
-        <div>
-          <dt>{text.missions[language]}</dt>
-          <dd>
-            {completed} / {total}
-          </dd>
-        </div>
-        <div className="progress-summary__bar" aria-hidden="true">
-          <i style={{ width: `${(completed / total) * 100}%` }} />
-        </div>
-      </dl>
+      {children}
     </section>
   )
 }

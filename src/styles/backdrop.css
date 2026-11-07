@@ -1,14 +1,13 @@
 /*
- * Background art of the game (ui/art/Backdrop.tsx). It starts below the header and the
- * game navigation, so that nothing crosses them and the website header keeps its
- * contrast. A gradient mask fades it into the page, and screens other than the initial
- * menu dim it further, because players read there.
+ * Background art of the game (ui/art/Backdrop.tsx). On the main menu it starts below the
+ * website header, so that nothing crosses the header and it keeps its contrast. A gradient
+ * mask fades it into the page, and the other screens dim it, because players read there.
  */
 
 .backdrop {
   position: absolute;
   z-index: -1;
-  top: 100px;
+  top: 0;
   left: 0;
   width: 100%;
   height: min(70vh, 560px);
@@ -21,6 +20,7 @@
 }
 
 .backdrop--prominent {
+  top: 64px;
   height: min(92vh, 760px);
   opacity: 0.8;
 }

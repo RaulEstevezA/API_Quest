@@ -1,6 +1,6 @@
 /**
  * Interface tests of the requirements that span several components: the website
- * header in the initial menu, language persistence and the storage warnings.
+ * header and the destinations of the main menu, language persistence and the storage warnings.
  */
 
 import { act } from 'react'
@@ -28,6 +28,12 @@ function renderApp(storage: StorageAdapter) {
   act(() => root.render(<App storage={storage} />))
 }
 
+/** Clicks an entry of the main menu by its visible text. */
+function openFromMenu(label: string) {
+  const entry = [...container.querySelectorAll('nav .button')].find((button) => button.textContent === label)
+  act(() => entry?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+}
+
 beforeEach(() => {
   container = document.createElement('div')
   document.body.append(container)
@@ -53,12 +59,40 @@ describe('initial menu', () => {
     expect(header?.querySelector('nav')).toBeNull()
   })
 
+  it('offers every destination of the game in its menu', () => {
+    renderApp(returningPlayerStorage())
+    const entries = [...container.querySelectorAll('nav .button')].map((entry) => entry.textContent)
+    expect(entries).toEqual(['Missions', 'Docs', 'Sandbox', 'Achievements', 'How to play', 'Reset progress', 'Games'])
+  })
+
+  it('shows the XP marker on the menu and on the mission list', () => {
+    renderApp(returningPlayerStorage())
+    expect(container.querySelector('.progress-summary')).not.toBeNull()
+    openFromMenu('Missions')
+    expect(container.querySelector('.progress-summary')).not.toBeNull()
+  })
+
+  it.each(['Missions', 'Docs', 'Sandbox', 'Achievements'])(
+    'hides the header and the menu on %s and offers the way back',
+    (destination) => {
+      renderApp(returningPlayerStorage())
+      openFromMenu(destination)
+      expect(container.querySelector('header')).toBeNull()
+      expect(container.querySelector('nav')).toBeNull()
+      expect(container.querySelector('.title-screen__logo')).toBeNull()
+      const back = container.querySelector('.screen-bar button')
+      expect(back?.textContent).toBe('← Menu')
+      act(() => back?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+      expect(container.querySelector('header')).not.toBeNull()
+    },
+  )
+
   it('changes the language of the interface and saves it for the website', () => {
     const storage = returningPlayerStorage()
     renderApp(storage)
     const spanish = [...container.querySelectorAll('header button')].find((button) => button.textContent === 'ES')
     act(() => spanish?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
-    expect(container.querySelector('#chapters-title')?.textContent).toBe('Capítulos')
+    expect(container.querySelector('nav .button')?.textContent).toBe('Misiones')
     expect(document.documentElement.lang).toBe('es')
     expect(storage.getItem('lang')).toBe('es')
   })

@@ -1,0 +1,30 @@
+/*
+ * Buttons of the main menu (components/MainMenu.tsx): one wide primary action and the
+ * rest in pairs. Links and buttons share the same look because both are menu entries.
+ */
+
+.main-menu {
+  width: min(100%, 420px);
+  margin-top: var(--space-20);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+}
+
+.main-menu .button {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+.main-menu__wide {
+  grid-column: 1 / -1;
+  min-height: 48px;
+  font-size: 0.95rem;
+}
+
+.title-screen .notice {
+  width: min(100%, 620px);
+  margin-bottom: 0;
+}

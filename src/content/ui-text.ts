@@ -46,13 +46,6 @@ export const uiText = {
   header: {
     languageGroup: t('Language', 'Idioma'),
   },
-  nav: {
-    label: t('Game navigation', 'Navegación del juego'),
-    missions: t('Missions', 'Misiones'),
-    docs: t('Docs', 'Docs'),
-    sandbox: t('Sandbox', 'Sandbox'),
-    help: t('How to play', 'Cómo jugar'),
-  },
   menu: {
     label: t('Main menu', 'Menú principal'),
     back: t('Menu', 'Menú'),
