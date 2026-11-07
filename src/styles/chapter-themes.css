@@ -1,0 +1,33 @@
+/*
+ * Colour of each chapter. Any element with these classes passes its accent down to its
+ * subtree through --chapter-accent. To theme a new chapter, add its class here.
+ * Accents are bright enough to read as text on every surface of tokens.css.
+ */
+
+.chapter-theme--1 {
+  --chapter-accent: #3dffa2;
+}
+
+.chapter-theme--2 {
+  --chapter-accent: #b6ee3c;
+}
+
+.chapter-theme--3 {
+  --chapter-accent: #ffc24b;
+}
+
+.chapter-theme--4 {
+  --chapter-accent: #4fe0ff;
+}
+
+.chapter-theme--5 {
+  --chapter-accent: #b9a2ff;
+}
+
+.chapter-theme--6 {
+  --chapter-accent: #ff94dc;
+}
+
+.chapter-theme--7 {
+  --chapter-accent: #ff7a6e;
+}
