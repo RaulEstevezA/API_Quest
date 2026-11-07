@@ -1,5 +1,8 @@
+/** Consistency tests of the mission catalogue: every mission must be bilingual and solvable. */
+
 import { describe, expect, it } from 'vitest'
 import { missions } from './missions'
+import { achievements, unlockedAchievements } from '../core/achievements'
 import { evaluateRequest } from '../core/evaluate-request'
 
 describe('mission catalogue', () => {
@@ -19,6 +22,11 @@ describe('mission catalogue', () => {
     }
   })
 
+  it('makes every achievement reachable by completing the catalogue', () => {
+    const earned = unlockedAchievements(missions.map((mission) => mission.id))
+    expect(earned).toEqual(achievements.map((achievement) => achievement.id))
+  })
+
   it('accepts the documented solution for every mission', () => {
     for (const mission of missions) {
       const expectation = mission.expectation
@@ -26,7 +34,11 @@ describe('mission catalogue', () => {
         method: expectation.method,
         path: expectation.path,
         query: Object.entries(expectation.query ?? {}).map(([key, value], index) => ({ id: `q-${index}`, key, value })),
-        headers: Object.entries(expectation.headers ?? {}).map(([key, value], index) => ({ id: `h-${index}`, key, value })),
+        headers: Object.entries(expectation.headers ?? {}).map(([key, value], index) => ({
+          id: `h-${index}`,
+          key,
+          value,
+        })),
         body: expectation.body === undefined ? '' : JSON.stringify(expectation.body),
       })
       expect(result, mission.id).toEqual({ correct: true, issues: [] })
