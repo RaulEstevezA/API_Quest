@@ -9,6 +9,7 @@ The seven chapters cover first requests, HTTP methods, status codes, JSON, query
 ## Features
 
 - Declarative bilingual mission catalogue with 56 missions.
+- A story told over one night shift, with a prologue per chapter and an ending.
 - First-visit onboarding with a direct path into the first mission and persistent help access.
 - Request builder for methods, endpoints, query parameters, headers, and JSON bodies.
 - Specific validation feedback, progressive hints, explanations, XP, and achievements.
@@ -49,6 +50,7 @@ Each kind of change has one place to go:
 | Pattern | Where | To extend it |
 |---|---|---|
 | Registry | `content/missions.ts` | Add a mission to its `chapter-<n>.ts` file |
+| Registry | `content/prologues.ts` | Edit the story of a chapter |
 | Registry | `core/achievements.ts` | Add an achievement with its unlock rule |
 | Registry | `core/evaluate-request.ts` | Add a validation rule to `requestRules` |
 | Registry | `core/sandbox/router.ts` | Write a route in `core/sandbox/routes/` and add it to `routes` |

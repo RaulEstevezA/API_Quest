@@ -9,6 +9,7 @@ Los siete capítulos cubren primeras peticiones, métodos HTTP, códigos de esta
 ## Funciones
 
 - Catálogo declarativo bilingüe con 56 misiones.
+- Una historia contada a lo largo de un turno de noche, con un prólogo por capítulo y un final.
 - Bienvenida para la primera visita, acceso directo a la primera misión y ayuda disponible en todo momento.
 - Constructor de métodos, endpoints, parámetros query, headers y cuerpos JSON.
 - Feedback de validación específico, pistas progresivas, explicaciones, XP y logros.
@@ -49,6 +50,7 @@ Cada tipo de cambio tiene un único lugar:
 | Patrón | Dónde | Cómo ampliarlo |
 |---|---|---|
 | Registro | `content/missions.ts` | Añade la misión a su archivo `chapter-<n>.ts` |
+| Registro | `content/prologues.ts` | Edita la historia de un capítulo |
 | Registro | `core/achievements.ts` | Añade el logro con su regla de desbloqueo |
 | Registro | `core/evaluate-request.ts` | Añade la regla de validación a `requestRules` |
 | Registro | `core/sandbox/router.ts` | Escribe una ruta en `core/sandbox/routes/` y añádela a `routes` |
