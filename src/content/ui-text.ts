@@ -50,6 +50,7 @@ export const uiText = {
     label: t('Main menu', 'Menú principal'),
     back: t('Menu', 'Menú'),
     continue: t('Continue', 'Continuar'),
+    briefing: t('Briefing', 'Informe'),
     ending: t('Ending', 'Final'),
     docs: t('Docs', 'Docs'),
     sandbox: t('Sandbox', 'Sandbox'),

@@ -107,6 +107,13 @@
   color: var(--muted);
 }
 
+.chapter-card__actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
 .badge {
   flex: none;
   padding: 3px 10px;

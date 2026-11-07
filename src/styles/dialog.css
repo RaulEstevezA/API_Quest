@@ -8,7 +8,7 @@
   max-height: min(88vh, 840px);
   padding: 0;
   overflow: auto;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--chapter-accent);
   border-radius: var(--radius-lg);
   background: var(--surface);
   box-shadow: var(--modal-shadow);
@@ -136,6 +136,36 @@
   border-radius: var(--radius);
   background: var(--accent-soft);
   font-size: 0.875rem;
+}
+
+/* Prologue of a chapter. */
+
+.prologue p {
+  margin: 0 0 var(--space-12);
+  color: var(--btn-text);
+  line-height: 1.7;
+}
+
+.prologue blockquote {
+  margin: var(--space-16) 0 0;
+  padding: var(--space-12) var(--space-16);
+  border-left: 3px solid var(--chapter-accent);
+  background: var(--surface-sunken);
+}
+
+.prologue blockquote b {
+  color: var(--chapter-accent);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+}
+
+.prologue blockquote p {
+  margin: var(--space-4) 0 0;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
 }
 
 .modal__actions {

@@ -10,11 +10,13 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { getMission, missions } from '../content/missions'
 import { uiText } from '../content/ui-text'
 import { findFirstPendingMission, findNextMission } from '../core/progress'
+import type { ChapterId } from '../core/missions'
 import type { StorageAdapter } from '../core/storage'
 import { Backdrop } from './art/Backdrop'
 import { browserStorage } from './browser-storage'
 import { AchievementsScreen } from './components/AchievementsScreen'
 import { ApiDocs } from './components/ApiDocs'
+import { ChapterPrologue } from './components/ChapterPrologue'
 import { EndingScreen } from './components/EndingScreen'
 import { Header } from './components/Header'
 import { MainMenu } from './components/MainMenu'
@@ -27,6 +29,7 @@ import { useLanguage } from './i18n'
 import { FIRST_MISSION_ID, INITIAL_SCREEN, type Screen } from './screens'
 import { useGameProgress } from './use-game-progress'
 import { useOnboarding } from './use-onboarding'
+import { usePrologues } from './use-prologues'
 import { useSandbox } from './use-sandbox'
 
 interface AppProps {
@@ -41,7 +44,10 @@ export function App({ storage = browserStorage }: AppProps) {
     useGameProgress(storage)
   const sandbox = useSandbox(storage, earnAchievement)
   const onboarding = useOnboarding(storage)
+  const story = usePrologues(storage)
   const [screen, setScreen] = useState<Screen>(INITIAL_SCREEN)
+  // Prologue the player asked to reread from the chapter list.
+  const [rereading, setRereading] = useState<ChapterId | null>(null)
 
   // Each screen is a new page for the player, so it must start at the top.
   useEffect(() => {
@@ -49,7 +55,10 @@ export function App({ storage = browserStorage }: AppProps) {
   }, [screen])
 
   const resetWithConfirmation = () => {
-    if (window.confirm(uiText.menu.resetConfirmation[language])) reset()
+    if (window.confirm(uiText.menu.resetConfirmation[language])) {
+      reset()
+      story.reset()
+    }
   }
 
   const startFirstMission = () => {
@@ -83,7 +92,13 @@ export function App({ storage = browserStorage }: AppProps) {
   )
 
   const renderMissionMap = () => (
-    <MissionMap language={language} progress={progress} onBack={backToMenu} onOpenMission={openMission} />
+    <MissionMap
+      language={language}
+      progress={progress}
+      onBack={backToMenu}
+      onOpenMission={openMission}
+      onReadPrologue={setRereading}
+    />
   )
 
   const renderScreen = () => {
@@ -141,11 +156,24 @@ export function App({ storage = browserStorage }: AppProps) {
     }
   }
 
+  // A prologue appears the first time the player enters its chapter, before the mission.
+  const openMissionChapter = screen.name === 'mission' ? getMission(screen.missionId)?.chapter : undefined
+  const pendingPrologue = openMissionChapter && !story.hasSeen(openMissionChapter) ? openMissionChapter : null
+  const prologueChapter = rereading ?? pendingPrologue
+
+  const closePrologue = () => {
+    if (prologueChapter) story.markSeen(prologueChapter)
+    setRereading(null)
+  }
+
   return (
     <>
       <Backdrop prominent={screen.name === 'menu'} lights={sandbox.lights} alarm={sandbox.alarm} />
       {screen.name === 'menu' && <Header language={language} onLanguageChange={setLanguage} />}
       <main className="app-shell">{renderScreen()}</main>
+      {prologueChapter && (
+        <ChapterPrologue language={language} chapter={prologueChapter} onClose={closePrologue} key={prologueChapter} />
+      )}
       <OnboardingDialog
         language={language}
         open={onboarding.open}

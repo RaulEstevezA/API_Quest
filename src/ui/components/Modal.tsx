@@ -16,13 +16,25 @@ interface ModalProps {
   title: string
   /** `true` for content that needs room, such as the API reference. */
   wide?: boolean
+  /** Extra classes of the window, such as the theme of a chapter. */
+  className?: string
   /** Buttons fixed at the bottom, always visible while the content scrolls. */
   actions?: ReactNode
   children: ReactNode
 }
 
 /** Renders the window and keeps the native element in sync with the `open` prop. */
-export function Modal({ language, open, onClose, eyebrow, title, wide = false, actions, children }: ModalProps) {
+export function Modal({
+  language,
+  open,
+  onClose,
+  eyebrow,
+  title,
+  wide = false,
+  className,
+  actions,
+  children,
+}: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleId = useId()
 
@@ -36,7 +48,7 @@ export function Modal({ language, open, onClose, eyebrow, title, wide = false, a
   return (
     <dialog
       ref={dialogRef}
-      className={`modal${wide ? ' modal--wide' : ''}`}
+      className={`modal${wide ? ' modal--wide' : ''}${className ? ` ${className}` : ''}`}
       aria-labelledby={titleId}
       onClose={onClose}
       onClick={(event) => {

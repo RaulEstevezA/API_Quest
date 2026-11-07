@@ -18,10 +18,11 @@ interface ChapterCardProps {
   language: Language
   completedMissions: GameProgress['completedMissions']
   onOpenMission: (id: string) => void
+  onReadPrologue: () => void
 }
 
 /** Renders a chapter with its missions, or its locked state. */
-export function ChapterCard({ chapter, language, completedMissions, onOpenMission }: ChapterCardProps) {
+export function ChapterCard({ chapter, language, completedMissions, onOpenMission, onReadPrologue }: ChapterCardProps) {
   const chapterMissions = getChapterMissions(chapter.id)
   const previousMissions = getChapterMissions(chapter.id - 1).map((mission) => mission.id)
   const unlocked = isChapterUnlocked(chapter.id, previousMissions, { completedMissions })
@@ -42,9 +43,16 @@ export function ChapterCard({ chapter, language, completedMissions, onOpenMissio
             <h3>{chapter.title[language]}</h3>
             <p>{chapter.description[language]}</p>
           </div>
-          <span className="badge">
-            {unlocked ? `${completedCount} / ${chapterMissions.length}` : text.locked[language]}
-          </span>
+          <div className="chapter-card__actions">
+            {unlocked && (
+              <button className="button button--small" type="button" onClick={onReadPrologue}>
+                {text.briefing[language]}
+              </button>
+            )}
+            <span className="badge">
+              {unlocked ? `${completedCount} / ${chapterMissions.length}` : text.locked[language]}
+            </span>
+          </div>
         </div>
 
         {unlocked && (

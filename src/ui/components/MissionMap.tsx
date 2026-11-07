@@ -5,6 +5,7 @@
 
 import { chapters } from '../../content/chapters'
 import { uiText } from '../../content/ui-text'
+import type { ChapterId } from '../../core/missions'
 import type { GameProgress } from '../../core/progress'
 import type { Language } from '../i18n'
 import { ChapterCard } from './ChapterCard'
@@ -18,10 +19,11 @@ interface MissionMapProps {
   progress: Pick<GameProgress, 'xp' | 'completedMissions'>
   onBack: () => void
   onOpenMission: (id: string) => void
+  onReadPrologue: (chapter: ChapterId) => void
 }
 
 /** Renders the chapters and their missions. */
-export function MissionMap({ language, progress, onBack, onOpenMission }: MissionMapProps) {
+export function MissionMap({ language, progress, onBack, onOpenMission, onReadPrologue }: MissionMapProps) {
   return (
     <>
       <ScreenBar backLabel={text.back[language]} onBack={onBack}>
@@ -40,6 +42,7 @@ export function MissionMap({ language, progress, onBack, onOpenMission }: Missio
             language={language}
             completedMissions={progress.completedMissions}
             onOpenMission={onOpenMission}
+            onReadPrologue={() => onReadPrologue(chapter.id)}
             key={chapter.id}
           />
         ))}

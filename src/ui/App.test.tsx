@@ -124,6 +124,22 @@ describe('initial menu', () => {
     expect(container.querySelector('header')).toBeNull()
   })
 
+  it('tells the story of a chapter the first time only, and lets the player reread it', () => {
+    const storage = returningPlayerStorage()
+    renderApp(storage)
+    openFromMenu('Missions')
+    expect(container.querySelector('.prologue')).toBeNull()
+    click(container.querySelector('.mission-tile'))
+    expect(container.querySelector('.modal.chapter-theme .modal__header h2')?.textContent).toBe('First night')
+    click(container.querySelector('.modal.chapter-theme .modal__actions .button--primary'))
+    expect(container.querySelector('.prologue')).toBeNull()
+    expect(storage.getItem('api-quest.prologues-seen')).toBe('[1]')
+
+    click(container.querySelector('.screen-bar .button'))
+    click([...container.querySelectorAll('.chapter-card button')].find((button) => button.textContent === 'Briefing'))
+    expect(container.querySelector('.prologue')).not.toBeNull()
+  })
+
   it('opens the API reference in a window without leaving the mission', () => {
     renderApp(returningPlayerStorage())
     openFromMenu('Missions')
