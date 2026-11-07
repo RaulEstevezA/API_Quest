@@ -5,6 +5,8 @@ import { calculateXp } from './scoring'
 import {
   completeMission,
   createInitialProgress,
+  findFirstPendingMission,
+  findNextMission,
   isChapterUnlocked,
   loadProgress,
   PROGRESS_STORAGE_KEY,
@@ -63,6 +65,35 @@ describe('progress', () => {
     expect(isChapterUnlocked(1, [], createInitialProgress())).toBe(true)
     expect(isChapterUnlocked(2, ['a'], progress)).toBe(true)
     expect(isChapterUnlocked(2, ['a', 'b'], progress)).toBe(false)
+  })
+})
+
+describe('mission order', () => {
+  const missions = [
+    { id: 'a', chapter: 1 },
+    { id: 'b', chapter: 1 },
+    { id: 'c', chapter: 2 },
+  ]
+  const solved = (...ids: string[]) =>
+    ids.reduce((progress, id) => completeMission(progress, id, 100, 1, 0), createInitialProgress())
+
+  it('continues with the first pending mission, or nothing when all are complete', () => {
+    expect(findFirstPendingMission(missions, solved('a'))).toBe('b')
+    expect(findFirstPendingMission(missions, solved('a', 'b', 'c'))).toBeNull()
+  })
+
+  it('offers the following mission once its chapter is unlocked', () => {
+    expect(findNextMission(missions, 'a', solved('a'))).toBe('b')
+    expect(findNextMission(missions, 'b', solved('a', 'b'))).toBe('c')
+  })
+
+  it('offers the first pending mission when the following chapter is locked', () => {
+    expect(findNextMission(missions, 'b', solved('b'))).toBe('a')
+  })
+
+  it('offers pending work after the last mission, and nothing when all are complete', () => {
+    expect(findNextMission(missions, 'c', solved('a', 'c'))).toBe('b')
+    expect(findNextMission(missions, 'c', solved('a', 'b', 'c'))).toBeNull()
   })
 })
 

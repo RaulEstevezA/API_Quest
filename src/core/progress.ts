@@ -1,6 +1,6 @@
 /**
- * Game progress rules: creation, versioned persistence, mission completion and
- * chapter unlocking. Pure functions only; storage is received through
+ * Game progress rules: creation, versioned persistence, mission completion, chapter
+ * unlocking and choosing the next mission. Pure functions only; storage is received through
  * `StorageAdapter`, and the mission catalogue through parameters.
  *
  * To change the saved format, increase `PROGRESS_VERSION`. Saved data from another
@@ -161,4 +161,45 @@ export function isChapterUnlocked(
   progress: Pick<GameProgress, 'completedMissions'>,
 ): boolean {
   return chapter === 1 || previousChapterMissions.every((id) => progress.completedMissions[id])
+}
+
+/** The fields of a mission that decide the playing order. */
+type MissionInOrder = { id: string; chapter: number }
+
+/**
+ * Finds the mission a returning player should continue with. Chapters unlock in order,
+ * so the first pending mission of the catalogue is always playable.
+ *
+ * @param missions Every mission, in playing order.
+ * @param progress Current progress.
+ * @returns Its identifier, or `null` when every mission is complete.
+ */
+export function findFirstPendingMission(
+  missions: readonly MissionInOrder[],
+  progress: Pick<GameProgress, 'completedMissions'>,
+): string | null {
+  return missions.find((mission) => !progress.completedMissions[mission.id])?.id ?? null
+}
+
+/**
+ * Finds the mission to offer after solving one: the following mission of the catalogue,
+ * unless its chapter is still locked or there is none, which happens when replaying an
+ * earlier mission. In those cases it offers the first pending mission instead.
+ *
+ * @param missions Every mission, in playing order.
+ * @param currentId Mission just solved.
+ * @param progress Progress that already includes that mission.
+ * @returns Its identifier, or `null` when there is nothing left to offer.
+ */
+export function findNextMission(
+  missions: readonly MissionInOrder[],
+  currentId: string,
+  progress: Pick<GameProgress, 'completedMissions'>,
+): string | null {
+  const next = missions[missions.findIndex((mission) => mission.id === currentId) + 1]
+  if (!next) return findFirstPendingMission(missions, progress)
+  const previousChapter = missions.filter((mission) => mission.chapter === next.chapter - 1).map((mission) => mission.id)
+  return isChapterUnlocked(next.chapter, previousChapter, progress)
+    ? next.id
+    : findFirstPendingMission(missions, progress)
 }
