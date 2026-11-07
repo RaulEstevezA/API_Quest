@@ -11,6 +11,11 @@ function request(method: HttpMethod, path: string, extra: Partial<ApiRequest> = 
   return { ...createEmptyRequest(), method, path, ...extra }
 }
 
+/** Builds the Authorization header of a token. */
+const bearer = (token: string) => ({ headers: [{ id: 'h', key: 'authorization', value: `Bearer ${token}` }] })
+const DEVELOPER = bearer('aq_live_7f3a')
+const ADMIN = bearer('aq_admin_91bc')
+
 const send = (method: HttpMethod, path: string, extra?: Partial<ApiRequest>, state: SandboxState = createSandboxState()) =>
   runSandboxRequest(state, request(method, path, extra))
 
@@ -57,6 +62,52 @@ describe('sandbox API', () => {
   })
 })
 
+describe('protected endpoints', () => {
+  it('asks for a token on the profile, as the missions teach', () => {
+    const missing = send('GET', '/profile').response
+    expect(missing).toMatchObject({ status: 401, body: { error: 'Authentication required' } })
+    expect(missing.headers).toMatchObject({ 'WWW-Authenticate': 'Bearer' })
+    expect(send('GET', '/profile', bearer('wrong')).response).toMatchObject({
+      status: 401,
+      body: { error: 'Invalid token' },
+    })
+    expect(send('GET', '/profile', DEVELOPER).response.body).toEqual({
+      id: 7,
+      name: 'Raúl Estévez',
+      role: 'developer',
+    })
+  })
+
+  it('updates the profile without letting the player change the role or the id', () => {
+    const body = '{"name":"Ana","role":"admin","id":1}'
+    const updated = send('PATCH', '/profile', { ...DEVELOPER, body })
+    expect(updated.response.body).toEqual({ id: 7, name: 'Ana', role: 'developer' })
+    expect(send('GET', '/profile', DEVELOPER, updated.state).response.body).toMatchObject({ name: 'Ana' })
+  })
+
+  it('tells 401 and 403 apart on admin endpoints', () => {
+    expect(send('GET', '/admin/users').response.status).toBe(401)
+    expect(send('GET', '/admin/users', DEVELOPER).response).toMatchObject({
+      status: 403,
+      body: { error: 'Admin role required' },
+    })
+    expect(send('GET', '/admin/users', ADMIN).response.status).toBe(200)
+    expect(send('GET', '/admin/audit-log', ADMIN).response.status).toBe(200)
+  })
+
+  it('lets administrators update users and orders', () => {
+    const result = send('PATCH', '/admin/orders/903', { ...ADMIN, body: '{"status":"refunded"}' })
+    expect(result.response.body).toMatchObject({ id: 903, customerId: 42, status: 'refunded' })
+    expect(result.state.orders[0].status).toBe('refunded')
+    expect(send('DELETE', '/admin/orders/903', ADMIN).response.status).toBe(405)
+    expect(send('GET', '/admin/unknown', ADMIN).response.status).toBe(404)
+  })
+
+  it('keeps the public collections open, as the first missions expect', () => {
+    expect(send('GET', '/orders').response.status).toBe(200)
+  })
+})
+
 describe('sandbox persistence', () => {
   it('round-trips and tells a first visit apart from damaged data', () => {
     const storage = createMemoryStorage()
@@ -69,4 +120,11 @@ describe('sandbox persistence', () => {
     expect(loadSandbox(storage).status).toBe('reset')
   })
 
+  it('accepts data saved before the profile and the lights existed', () => {
+    const storage = createMemoryStorage()
+    storage.setItem(SANDBOX_KEY, '{"version":1,"users":[],"products":[],"orders":[]}')
+    const { state, status } = loadSandbox(storage)
+    expect(status).toBe('restored')
+    expect(send('GET', '/profile', DEVELOPER, state).response.status).toBe(200)
+  })
 })

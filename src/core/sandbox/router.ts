@@ -9,10 +9,11 @@
 import type { ApiRequest, ApiResponse } from '../http'
 import type { LocalizedText } from '../missions'
 import { loginRoute } from './routes/auth'
+import { adminRoute, profileRoute } from './routes/protected'
 import { resourcesRoute } from './routes/resources'
 import { endpointNotFound, type Route, type SandboxResult, type SandboxState } from './state'
 
-const routes: Route[] = [loginRoute, resourcesRoute]
+const routes: Route[] = [loginRoute, profileRoute, adminRoute, resourcesRoute]
 
 /** A body is always JSON here, so responses declare it unless a route has set its own headers. */
 function withContentType(response: ApiResponse): ApiResponse {
