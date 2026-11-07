@@ -1,6 +1,23 @@
+/**
+ * Game progress rules: creation, versioned persistence, mission completion and
+ * chapter unlocking. Pure functions only; storage is received through
+ * `StorageAdapter`, and the mission catalogue through parameters.
+ *
+ * To change the saved format, increase `PROGRESS_VERSION`. Saved data from another
+ * version is reported as `reset`, so the interface can tell the player about it:
+ * progress must never be lost silently.
+ */
+
+import { unlockedAchievements } from './achievements'
+import { safeRead, safeRemove, safeWrite, type StorageAdapter } from './storage'
+
+/** Version of the saved format. Saved data with another version is not restored. */
 export const PROGRESS_VERSION = 1
+
+/** Key of the saved progress, following the `<game>.progress` convention. */
 export const PROGRESS_STORAGE_KEY = 'api-quest.progress'
 
+/** Best result of a mission and the effort spent on its latest completion. */
 export interface MissionProgress {
   completed: boolean
   bestXp: number
@@ -8,6 +25,7 @@ export interface MissionProgress {
   hintsUsed: number
 }
 
+/** Everything saved about a player. */
 export interface GameProgress {
   version: number
   xp: number
@@ -16,12 +34,21 @@ export interface GameProgress {
   lastMissionId: string | null
 }
 
-export interface StorageAdapter {
-  getItem(key: string): string | null
-  setItem(key: string, value: string): void
-  removeItem(key: string): void
+/**
+ * Outcome of reading saved progress:
+ * - `new`: nothing was saved, or storage is unavailable.
+ * - `restored`: the saved progress was recovered.
+ * - `reset`: data existed but was unreadable or from another version, so it was replaced.
+ */
+export type ProgressLoadStatus = 'new' | 'restored' | 'reset'
+
+/** Progress to play with and how it was obtained. */
+export interface ProgressLoadResult {
+  progress: GameProgress
+  status: ProgressLoadStatus
 }
 
+/** Creates the progress of a player who has not completed anything. */
 export function createInitialProgress(): GameProgress {
   return {
     version: PROGRESS_VERSION,
@@ -32,6 +59,7 @@ export function createInitialProgress(): GameProgress {
   }
 }
 
+/** Checks that an unknown value has the shape and version of the current format. */
 function isProgress(value: unknown): value is GameProgress {
   if (!value || typeof value !== 'object') return false
   const candidate = value as Partial<GameProgress>
@@ -39,39 +67,63 @@ function isProgress(value: unknown): value is GameProgress {
     candidate.version === PROGRESS_VERSION &&
     typeof candidate.xp === 'number' &&
     typeof candidate.completedMissions === 'object' &&
+    candidate.completedMissions !== null &&
     Array.isArray(candidate.achievements)
   )
 }
 
-export function loadProgress(storage: StorageAdapter): GameProgress {
+/**
+ * Reads saved progress.
+ *
+ * @param storage Store that holds the progress.
+ * @returns The progress to play with, plus a status that tells a first visit
+ * apart from saved data that could not be restored. It does not throw.
+ */
+export function loadProgress(storage: Pick<StorageAdapter, 'getItem'>): ProgressLoadResult {
+  const saved = safeRead(storage, PROGRESS_STORAGE_KEY)
+  if (!saved) return { progress: createInitialProgress(), status: 'new' }
   try {
-    const saved = storage.getItem(PROGRESS_STORAGE_KEY)
-    if (!saved) return createInitialProgress()
     const parsed: unknown = JSON.parse(saved)
-    return isProgress(parsed) ? parsed : createInitialProgress()
+    if (isProgress(parsed)) return { progress: parsed, status: 'restored' }
   } catch {
-    return createInitialProgress()
+    // Corrupted JSON is handled below, exactly like an incompatible version.
   }
+  return { progress: createInitialProgress(), status: 'reset' }
 }
 
-export function saveProgress(storage: StorageAdapter, progress: GameProgress): boolean {
-  try {
-    storage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress))
-    return true
-  } catch {
-    return false
-  }
+/**
+ * Saves progress.
+ *
+ * @param storage Store that receives the progress.
+ * @param progress Progress to save.
+ * @returns `false` when storage rejected the write, so the player can be warned.
+ */
+export function saveProgress(storage: Pick<StorageAdapter, 'setItem'>, progress: GameProgress): boolean {
+  return safeWrite(storage, PROGRESS_STORAGE_KEY, JSON.stringify(progress))
 }
 
-export function resetProgress(storage: StorageAdapter): GameProgress {
-  try {
-    storage.removeItem(PROGRESS_STORAGE_KEY)
-  } catch {
-    // The in-memory reset still succeeds when browser storage is unavailable.
-  }
+/**
+ * Deletes saved progress. The reset succeeds in memory even if storage fails.
+ *
+ * @param storage Store that holds the progress.
+ * @returns Progress for a player starting again.
+ */
+export function resetProgress(storage: Pick<StorageAdapter, 'removeItem'>): GameProgress {
+  safeRemove(storage, PROGRESS_STORAGE_KEY)
   return createInitialProgress()
 }
 
+/**
+ * Records a solved mission. Replaying a mission can improve its score but never
+ * lowers it, so total XP only grows by the difference with the previous best.
+ *
+ * @param progress Current progress. It is not mutated.
+ * @param missionId Solved mission.
+ * @param earnedXp XP earned in this attempt.
+ * @param attempts Attempts spent in this completion.
+ * @param hintsUsed Hints revealed in this completion.
+ * @returns The new progress, with achievements recalculated.
+ */
 export function completeMission(
   progress: GameProgress,
   missionId: string,
@@ -93,5 +145,20 @@ export function completeMission(
     completedMissions,
   }
 }
-import { unlockedAchievements } from './achievements'
 
+/**
+ * Decides whether a chapter can be played: the first one always can, and each of
+ * the others requires every mission of the previous chapter.
+ *
+ * @param chapter Number of the chapter.
+ * @param previousChapterMissions Identifiers of the missions of the previous chapter.
+ * @param progress Current progress.
+ * @returns `true` when the chapter is unlocked.
+ */
+export function isChapterUnlocked(
+  chapter: number,
+  previousChapterMissions: readonly string[],
+  progress: Pick<GameProgress, 'completedMissions'>,
+): boolean {
+  return chapter === 1 || previousChapterMissions.every((id) => progress.completedMissions[id])
+}
