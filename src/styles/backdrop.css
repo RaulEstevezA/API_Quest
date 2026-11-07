@@ -20,9 +20,15 @@
 }
 
 .backdrop--prominent {
-  top: 64px;
+  top: 88px;
   height: min(92vh, 760px);
   opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .backdrop--prominent {
+    top: 56px;
+  }
 }
 
 .backdrop svg {
