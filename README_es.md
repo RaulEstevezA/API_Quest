@@ -51,7 +51,8 @@ Cada tipo de cambio tiene un único lugar:
 | Registro | `content/missions.ts` | Añade la misión a su archivo `chapter-<n>.ts` |
 | Registro | `core/achievements.ts` | Añade el logro con su regla de desbloqueo |
 | Registro | `core/evaluate-request.ts` | Añade la regla de validación a `requestRules` |
-| Estrategia | `core/sandbox.ts` | Un manejador por método HTTP en `methodHandlers` |
+| Registro | `core/sandbox/router.ts` | Escribe una ruta en `core/sandbox/routes/` y añádela a `routes` |
+| Estrategia | `core/sandbox/routes/resources.ts` | Un manejador por método HTTP en `methodHandlers` |
 | Máquina de estados | `ui/screens.ts` | Añade la pantalla a `Screen`; el compilador señala el `switch` de `App.tsx` |
 | Inversión de dependencias | `core/storage.ts` | Implementa `StorageAdapter`, como hace `ui/browser-storage.ts` |
 

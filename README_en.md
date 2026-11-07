@@ -51,7 +51,8 @@ Each kind of change has one place to go:
 | Registry | `content/missions.ts` | Add a mission to its `chapter-<n>.ts` file |
 | Registry | `core/achievements.ts` | Add an achievement with its unlock rule |
 | Registry | `core/evaluate-request.ts` | Add a validation rule to `requestRules` |
-| Strategy | `core/sandbox.ts` | One handler per HTTP method in `methodHandlers` |
+| Registry | `core/sandbox/router.ts` | Write a route in `core/sandbox/routes/` and add it to `routes` |
+| Strategy | `core/sandbox/routes/resources.ts` | One handler per HTTP method in `methodHandlers` |
 | State machine | `ui/screens.ts` | Add a screen to `Screen`; the compiler points to the `switch` in `App.tsx` |
 | Dependency inversion | `core/storage.ts` | Implement `StorageAdapter`, as `ui/browser-storage.ts` does |
 
