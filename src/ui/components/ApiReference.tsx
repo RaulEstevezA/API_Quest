@@ -1,0 +1,58 @@
+/**
+ * Reference of the fictional API, shown on the Docs screen and in the window that a
+ * mission can open. The documented endpoints are data, in `content/api-reference.ts`.
+ */
+
+import { apiEndpointGroups, apiQueryParameters } from '../../content/api-reference'
+import { uiText } from '../../content/ui-text'
+import type { Language } from '../i18n'
+
+const text = uiText.docs
+
+/** Renders the endpoints, the query parameters and the authentication header. */
+export function ApiReference({ language }: { language: Language }) {
+  return (
+    <>
+      <div className="docs__grid">
+        {apiEndpointGroups.map(({ name, endpoints }) => (
+          <article className="docs__group" key={name}>
+            <h2>{name}</h2>
+            <ul>
+              {endpoints.map((endpoint) => {
+                const [method, path] = endpoint.split(' ')
+                return (
+                  <li key={endpoint}>
+                    <span className={`method method--${method.toLowerCase()}`}>{method}</span>
+                    <code>{path}</code>
+                  </li>
+                )
+              })}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <article className="docs__group">
+        <h2>{text.queryParameters[language]}</h2>
+        <div className="docs__table" role="table">
+          <div role="row">
+            <strong role="columnheader">{text.resource[language]}</strong>
+            <strong role="columnheader">{text.parameters[language]}</strong>
+          </div>
+          {apiQueryParameters.map(({ resource, parameters }) => (
+            <div role="row" key={resource}>
+              <span role="cell">{resource}</span>
+              <code role="cell">{parameters}</code>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article className="docs__group">
+        <h2>{text.authentication[language]}</h2>
+        <p>{text.authenticationHint[language]}</p>
+        <pre>Authorization: Bearer &lt;token&gt;</pre>
+      </article>
+    </>
+  )
+}
