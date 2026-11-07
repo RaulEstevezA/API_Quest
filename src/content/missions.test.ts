@@ -24,7 +24,9 @@ describe('mission catalogue', () => {
 
   it('makes every achievement reachable by completing the catalogue', () => {
     const earned = unlockedAchievements(missions.map((mission) => mission.id))
-    expect(earned).toEqual(achievements.filter((achievement) => !achievement.secret).map((achievement) => achievement.id))
+    expect(earned).toEqual(
+      achievements.filter((achievement) => !achievement.secret).map((achievement) => achievement.id),
+    )
   })
 
   it('accepts the documented solution for every mission', () => {

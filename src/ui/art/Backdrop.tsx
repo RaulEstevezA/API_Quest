@@ -30,34 +30,34 @@ interface BackdropProps {
 export function Backdrop({ prominent, lights, alarm }: BackdropProps) {
   return (
     <>
-    <div
-      className={`backdrop backdrop--lights-${lights}${prominent ? ' backdrop--prominent' : ''}${alarm ? ' backdrop--alarm' : ''}`}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox={`0 0 ${SCENE_WIDTH} ${SCENE_HEIGHT}`}
-        preserveAspectRatio="xMidYMin slice"
-        shapeRendering="crispEdges"
-        focusable="false"
+      <div
+        className={`backdrop backdrop--lights-${lights}${prominent ? ' backdrop--prominent' : ''}${alarm ? ' backdrop--alarm' : ''}`}
+        aria-hidden="true"
       >
-        <path className="backdrop__back-rack" d={scene.backRacks} />
-        <path className="backdrop__back-plate" d={scene.backPlates} />
-        <path className="backdrop__tray" d={scene.trays} />
-        <path className="backdrop__floor" d={scene.floorLines} />
-        <path className="backdrop__front-rack" d={scene.frontRacks} />
-        <path className="backdrop__front-plate" d={scene.frontPlates} />
-        <path className="backdrop__light" d={scene.steadyLights} />
-        {scene.blinkingLights.map((lights, index) => (
-          <path className={`backdrop__light backdrop__light--blink-${index + 1}`} d={lights} key={index} />
-        ))}
-        {PACKETS.map(({ y, className }) => (
-          <rect className={className} x="-8" y={y} width="6" height="2" key={className} />
-        ))}
-      </svg>
-    </div>
-    {/* The scene is dim on most screens, so a brief effect over the page makes the change noticeable. */}
-    <div className={`room-effect room-effect--${lights}`} key={lights} aria-hidden="true" />
-    {alarm && <div className="room-alarm" aria-hidden="true" />}
+        <svg
+          viewBox={`0 0 ${SCENE_WIDTH} ${SCENE_HEIGHT}`}
+          preserveAspectRatio="xMidYMin slice"
+          shapeRendering="crispEdges"
+          focusable="false"
+        >
+          <path className="backdrop__back-rack" d={scene.backRacks} />
+          <path className="backdrop__back-plate" d={scene.backPlates} />
+          <path className="backdrop__tray" d={scene.trays} />
+          <path className="backdrop__floor" d={scene.floorLines} />
+          <path className="backdrop__front-rack" d={scene.frontRacks} />
+          <path className="backdrop__front-plate" d={scene.frontPlates} />
+          <path className="backdrop__light" d={scene.steadyLights} />
+          {scene.blinkingLights.map((lights, index) => (
+            <path className={`backdrop__light backdrop__light--blink-${index + 1}`} d={lights} key={index} />
+          ))}
+          {PACKETS.map(({ y, className }) => (
+            <rect className={className} x="-8" y={y} width="6" height="2" key={className} />
+          ))}
+        </svg>
+      </div>
+      {/* The scene is dim on most screens, so a brief effect over the page makes the change noticeable. */}
+      <div className={`room-effect room-effect--${lights}`} key={lights} aria-hidden="true" />
+      {alarm && <div className="room-alarm" aria-hidden="true" />}
     </>
   )
 }

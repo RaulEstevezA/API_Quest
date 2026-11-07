@@ -104,7 +104,11 @@ const developerRoute: Route = ({ state, request, parts, language }) => {
   const render = request.query.some((entry) => entry.key.trim() === 'render' && entry.value.trim() === 'true')
   const body = render
     ? { name: 'The Developer', message: clues.rendered[language] }
-    : { name: 'The Developer', data: '1f8b0800 00000000 0003ec7c 09545349 b7ee3949 88090 ...', hint: clues.binaryHint[language] }
+    : {
+        name: 'The Developer',
+        data: '1f8b0800 00000000 0003ec7c 09545349 b7ee3949 88090 ...',
+        hint: clues.binaryHint[language],
+      }
   return { state, response: { status: 200, statusText: 'OK', body }, renderPortrait: render || undefined }
 }
 
@@ -133,4 +137,11 @@ const productionRoute: Route = ({ state, request, parts, language }) => {
 }
 
 /** Every hidden route. */
-export const secretRoutes: Route[] = [firstClueRoute, nightShiftRoute, serverRoomRoute, developerRoute, coffeeRoute, productionRoute]
+export const secretRoutes: Route[] = [
+  firstClueRoute,
+  nightShiftRoute,
+  serverRoomRoute,
+  developerRoute,
+  coffeeRoute,
+  productionRoute,
+]

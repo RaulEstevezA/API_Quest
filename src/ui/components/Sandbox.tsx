@@ -21,7 +21,10 @@ const ALL_FIELDS: RequestField[] = ['method', 'path', 'query', 'headers', 'body'
 
 interface SandboxProps {
   language: Language
-  sandbox: Pick<ReturnType<typeof useSandbox>, 'dataWasReset' | 'response' | 'sendCount' | 'portraitVisible' | 'send' | 'reset'>
+  sandbox: Pick<
+    ReturnType<typeof useSandbox>,
+    'dataWasReset' | 'response' | 'sendCount' | 'portraitVisible' | 'send' | 'reset'
+  >
 }
 
 /** Renders the Sandbox. */

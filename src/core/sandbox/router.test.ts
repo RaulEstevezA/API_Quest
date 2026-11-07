@@ -16,8 +16,12 @@ const bearer = (token: string) => ({ headers: [{ id: 'h', key: 'authorization', 
 const DEVELOPER = bearer('aq_live_7f3a')
 const ADMIN = bearer('aq_admin_91bc')
 
-const send = (method: HttpMethod, path: string, extra?: Partial<ApiRequest>, state: SandboxState = createSandboxState()) =>
-  runSandboxRequest(state, request(method, path, extra))
+const send = (
+  method: HttpMethod,
+  path: string,
+  extra?: Partial<ApiRequest>,
+  state: SandboxState = createSandboxState(),
+) => runSandboxRequest(state, request(method, path, extra))
 
 describe('sandbox API', () => {
   it('keeps created resources for later requests', () => {

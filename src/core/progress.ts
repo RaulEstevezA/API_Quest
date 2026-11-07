@@ -204,7 +204,9 @@ export function findNextMission(
 ): string | null {
   const next = missions[missions.findIndex((mission) => mission.id === currentId) + 1]
   if (!next) return findFirstPendingMission(missions, progress)
-  const previousChapter = missions.filter((mission) => mission.chapter === next.chapter - 1).map((mission) => mission.id)
+  const previousChapter = missions
+    .filter((mission) => mission.chapter === next.chapter - 1)
+    .map((mission) => mission.id)
   return isChapterUnlocked(next.chapter, previousChapter, progress)
     ? next.id
     : findFirstPendingMission(missions, progress)

@@ -83,12 +83,7 @@ export function App({ storage = browserStorage }: AppProps) {
   )
 
   const renderMissionMap = () => (
-    <MissionMap
-      language={language}
-      progress={progress}
-      onBack={backToMenu}
-      onOpenMission={openMission}
-    />
+    <MissionMap language={language} progress={progress} onBack={backToMenu} onOpenMission={openMission} />
   )
 
   const renderScreen = () => {
