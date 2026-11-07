@@ -11,6 +11,7 @@
   gap: var(--space-16);
 }
 
+.section-heading h1,
 .section-heading h2 {
   margin: 0;
   font-family: var(--mono);
@@ -21,21 +22,6 @@
 .section-heading p {
   margin: 0;
   color: var(--muted);
-}
-
-.section-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: var(--space-8);
-}
-
-.section-actions a.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
 }
 
 .chapter-list {
@@ -218,10 +204,6 @@
   .section-heading {
     align-items: stretch;
     flex-direction: column;
-  }
-
-  .section-actions {
-    justify-content: flex-start;
   }
 
   .chapter-card {
