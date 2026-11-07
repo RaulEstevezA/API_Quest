@@ -110,6 +110,14 @@
   text-transform: uppercase;
 }
 
+/* Solid labels, because the background scene can show through this row. */
+.packet-wire span {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+}
+
 .packet-wire__line {
   position: relative;
   height: 2px;
