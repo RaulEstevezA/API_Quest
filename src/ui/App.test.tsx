@@ -111,6 +111,18 @@ describe('initial menu', () => {
     expect(storage.getItem('lang')).toBe('es')
   })
 
+  it('keeps the page position and the focus on the selector when the language changes', () => {
+    renderApp(returningPlayerStorage())
+    const spanish = [...container.querySelectorAll('header button')].find(
+      (button): button is HTMLButtonElement => button.textContent === 'ES',
+    )
+    spanish?.focus()
+    vi.mocked(window.scrollTo).mockClear()
+    click(spanish)
+    expect(document.activeElement).toBe(spanish)
+    expect(window.scrollTo).not.toHaveBeenCalled()
+  })
+
   it('offers the ending once every mission is complete', () => {
     const storage = returningPlayerStorage()
     const finished = missions.reduce(
