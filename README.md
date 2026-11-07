@@ -2,6 +2,8 @@
 
 API Quest is an interactive educational game for learning and practising REST APIs by building, sending, and debugging realistic HTTP requests.
 
+**[Play API Quest](https://raulesteveza.github.io/games/API_Quest/)**
+
 - 🇬🇧 **English:** [Full documentation](./README_en.md)
 - 🇪🇸 **Español:** [Documentación completa](./README_es.md)
 
