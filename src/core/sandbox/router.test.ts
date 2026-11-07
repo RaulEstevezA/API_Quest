@@ -95,6 +95,11 @@ describe('sandbox API', () => {
     expect(Array.isArray(send('GET', '/products').response.body)).toBe(true)
   })
 
+  it('does not mistake inherited names for filters or tokens', () => {
+    expect(send('GET', '/products?constructor=x').response.body).toEqual([])
+    expect(send('GET', '/profile', bearer('constructor')).response.status).toBe(401)
+  })
+
   it('rejects invalid values instead of guessing', () => {
     for (const path of ['/products?page=0', '/products?limit=abc', '/products?page=1.5', '/products?order=up']) {
       expect(send('GET', path).response.status).toBe(400)

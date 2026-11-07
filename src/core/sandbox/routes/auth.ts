@@ -47,6 +47,7 @@ export function authenticate(request: ApiRequest): { role: Role } | { failure: A
     },
   })
   if (!header) return unauthorized('Authentication required')
-  const role = TOKEN_ROLES[header.value.trim().replace(/^Bearer\s+/i, '')]
-  return role ? { role } : unauthorized('Invalid token')
+  const token = header.value.trim().replace(/^Bearer\s+/i, '')
+  // `hasOwn` because a player can type any token, including `constructor`.
+  return Object.hasOwn(TOKEN_ROLES, token) ? { role: TOKEN_ROLES[token] } : unauthorized('Invalid token')
 }

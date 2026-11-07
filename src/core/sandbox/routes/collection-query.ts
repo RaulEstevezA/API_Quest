@@ -65,7 +65,10 @@ export function applyCollectionQuery(
     .reduce<readonly SandboxResource[]>((items, entry) => {
       const name = entry.key.trim()
       const value = entry.value.trim()
-      const filter: Filter = specialFilters[name] ?? ((item) => String(item[name]) === value)
+      // `hasOwn` because a player can type any name, including `constructor`.
+      const filter: Filter = Object.hasOwn(specialFilters, name)
+        ? specialFilters[name]
+        : (item) => String(item[name]) === value
       return items.filter((item) => filter(item, value))
     }, collection)
 
