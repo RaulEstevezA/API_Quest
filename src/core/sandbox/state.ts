@@ -42,6 +42,8 @@ export interface SandboxResult {
   response: ApiResponse
   /** Achievement earned by this request. */
   earnedAchievement?: string
+  /** Shows the recovered image below the response. */
+  renderPortrait?: boolean
   /** Starts the alarm of the room. This response replaces the current one when it ends. */
   alarmFollowUp?: ApiResponse
 }

@@ -94,6 +94,14 @@
   margin: 0;
 }
 
+.recovered-portrait {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-12);
+  border: 1px solid var(--border);
+  image-rendering: pixelated;
+}
+
 @keyframes feedback-arrive {
   from {
     opacity: 0;

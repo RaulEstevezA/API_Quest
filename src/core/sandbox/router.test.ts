@@ -138,6 +138,17 @@ describe('hidden routes', () => {
     expect(send('DELETE', '/server-room').response.status).toBe(405)
   })
 
+  it('renders the developer only when asked, also from the path', () => {
+    expect(send('PATCH', '/server-room', { body: '{"lights":"off"}' }).response.body).toMatchObject({
+      note: 'The previous shift left something behind at /developer',
+    })
+    expect(send('GET', '/developer').renderPortrait).toBeUndefined()
+    expect(send('GET', '/developer').response.body).toMatchObject({ hint: 'Binary data. Try ?render=true' })
+    expect(send('GET', '/developer?render=true').renderPortrait).toBe(true)
+    const row = { query: [{ id: 'q', key: 'render', value: 'true' }] }
+    expect(send('GET', '/developer', row).renderPortrait).toBe(true)
+  })
+
   it('answers the teapot joke and pretends to delete production', () => {
     expect(send('GET', '/coffee').response).toMatchObject({ status: 418, statusText: "I'm a teapot" })
     const production = send('DELETE', '/production')

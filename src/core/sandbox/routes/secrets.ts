@@ -4,7 +4,8 @@
  *
  * The main one is a trail that practises reading responses: `/users/42` leads to
  * `/users/0`, which leads to `/server-room`, where turning the lights off earns a secret
- * achievement. The clues are game content rather than API data, so they are translated.
+ * achievement and points to `/developer`, whose binary data is only readable with
+ * `?render=true`. The clues are game content rather than API data, so they are translated.
  * To add a secret, write its route and add it to `secretRoutes`.
  */
 
@@ -28,6 +29,12 @@ const clues = {
   },
   roomHint: { en: 'Try changing that.', es: 'Prueba a cambiarlo.' },
   lightsOut: { en: 'Lights out. Shift over.', es: 'Luces apagadas. Fin del turno.' },
+  lastClue: {
+    en: 'The previous shift left something behind at /developer',
+    es: 'El turno anterior dejó algo en /developer',
+  },
+  binaryHint: { en: 'Binary data. Try ?render=true', es: 'Datos binarios. Prueba ?render=true' },
+  rendered: { en: 'Order served.', es: 'Pedido servido.' },
   production: { en: 'Good luck explaining this.', es: 'Suerte explicando esto.' },
   rollback: { en: 'Backup restored. Nobody saw anything.', es: 'Copia restaurada. Nadie ha visto nada.' },
 } satisfies Record<string, LocalizedText>
@@ -82,10 +89,23 @@ const serverRoomRoute: Route = ({ state, request, parts, language }) => {
     response: {
       status: 200,
       statusText: 'OK',
-      body: nextLights === 'off' ? { lights: nextLights, message: clues.lightsOut[language] } : { lights: nextLights },
+      body:
+        nextLights === 'off'
+          ? { lights: nextLights, message: clues.lightsOut[language], note: clues.lastClue[language] }
+          : { lights: nextLights },
     },
     earnedAchievement: nextLights === 'off' ? NIGHT_SHIFT_ACHIEVEMENT : undefined,
   }
+}
+
+/** Looks like garbage until the player asks to render it, which reveals the portrait of the developer. */
+const developerRoute: Route = ({ state, request, parts, language }) => {
+  if (parts.join('/') !== 'developer' || request.method !== 'GET') return null
+  const render = request.query.some((entry) => entry.key.trim() === 'render' && entry.value.trim() === 'true')
+  const body = render
+    ? { name: 'The Developer', message: clues.rendered[language] }
+    : { name: 'The Developer', data: '1f8b0800 00000000 0003ec7c 09545349 b7ee3949 88090 ...', hint: clues.binaryHint[language] }
+  return { state, response: { status: 200, statusText: 'OK', body }, renderPortrait: render || undefined }
 }
 
 /** A real HTTP status code that was born as a joke, for any method. */
@@ -113,4 +133,4 @@ const productionRoute: Route = ({ state, request, parts, language }) => {
 }
 
 /** Every hidden route. */
-export const secretRoutes: Route[] = [firstClueRoute, nightShiftRoute, serverRoomRoute, coffeeRoute, productionRoute]
+export const secretRoutes: Route[] = [firstClueRoute, nightShiftRoute, serverRoomRoute, developerRoute, coffeeRoute, productionRoute]

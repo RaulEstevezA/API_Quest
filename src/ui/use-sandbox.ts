@@ -28,6 +28,7 @@ export function useSandbox(storage: StorageAdapter, onAchievement: (id: string) 
   const [response, setResponse] = useState<ApiResponse | null>(null)
   const [sendCount, setSendCount] = useState(0)
   const [alarmFollowUp, setAlarmFollowUp] = useState<ApiResponse | null>(null)
+  const [portraitVisible, setPortraitVisible] = useState(false)
 
   useEffect(() => {
     saveSandbox(storage, state)
@@ -49,18 +50,21 @@ export function useSandbox(storage: StorageAdapter, onAchievement: (id: string) 
     dataWasReset,
     response,
     sendCount,
+    portraitVisible,
     send: (request: ApiRequest, language: Language) => {
       const result = runSandboxRequest(state, request, language)
       setState(result.state)
       setResponse(result.response)
       setSendCount((count) => count + 1)
       setAlarmFollowUp(result.alarmFollowUp ?? null)
+      setPortraitVisible(result.renderPortrait === true)
       if (result.earnedAchievement) onAchievement(result.earnedAchievement)
     },
     reset: () => {
       setState(createSandboxState())
       setResponse(null)
       setAlarmFollowUp(null)
+      setPortraitVisible(false)
       setDataWasReset(false)
     },
   }

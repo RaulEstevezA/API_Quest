@@ -10,6 +10,7 @@ import type { RequestField } from '../../core/missions'
 import type { Language } from '../i18n'
 import type { useSandbox } from '../use-sandbox'
 import { PacketWire } from './PacketWire'
+import { RecoveredPortrait } from './RecoveredPortrait'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
 
@@ -20,13 +21,13 @@ const ALL_FIELDS: RequestField[] = ['method', 'path', 'query', 'headers', 'body'
 
 interface SandboxProps {
   language: Language
-  sandbox: Pick<ReturnType<typeof useSandbox>, 'dataWasReset' | 'response' | 'sendCount' | 'send' | 'reset'>
+  sandbox: Pick<ReturnType<typeof useSandbox>, 'dataWasReset' | 'response' | 'sendCount' | 'portraitVisible' | 'send' | 'reset'>
 }
 
 /** Renders the Sandbox. */
 export function Sandbox({ language, sandbox }: SandboxProps) {
   const [request, setRequest] = useState<ApiRequest>(() => ({ ...createEmptyRequest(), path: '/products' }))
-  const { dataWasReset, response, sendCount, send, reset } = sandbox
+  const { dataWasReset, response, sendCount, portraitVisible, send, reset } = sandbox
 
   const resetWithConfirmation = () => {
     if (window.confirm(text.resetConfirmation[language])) reset()
@@ -64,6 +65,7 @@ export function Sandbox({ language, sandbox }: SandboxProps) {
               role="status"
             >
               <ResponseDetails response={response} />
+              {portraitVisible && <RecoveredPortrait language={language} />}
             </div>
           ) : (
             <p className="empty-state">{text.noResponse[language]}</p>

@@ -129,6 +129,12 @@ export const uiText = {
     resetData: t('Reset data', 'Restablecer datos'),
     resetConfirmation: t('Reset all Sandbox data?', '¿Restablecer todos los datos del Sandbox?'),
     noResponse: t('Send a request to begin.', 'Envía una petición para empezar.'),
+    portraitAlt: t(
+      'Pixel art portrait of The Developer dressed as a waiter, serving a 200 OK response in a server room.',
+      'Retrato en pixel art de The Developer vestido de camarero, sirviendo una respuesta 200 OK en una sala de servidores.',
+    ),
+    portraitLoading: t('Decoding binary data...', 'Decodificando datos binarios...'),
+    portraitFailed: t('The binary data could not be decoded.', 'No se han podido decodificar los datos binarios.'),
     dataReset: t(
       'Your saved Sandbox data could not be restored, so it has returned to its initial values.',
       'No se han podido recuperar tus datos del Sandbox, así que han vuelto a los valores iniciales.',
