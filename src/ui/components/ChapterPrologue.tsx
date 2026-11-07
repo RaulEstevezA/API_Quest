@@ -2,6 +2,7 @@
 
 import { PROLOGUE_SPEAKER, prologues } from '../../content/prologues'
 import type { ChapterId } from '../../core/missions'
+import { chapterArtUrl } from '../art/chapter-art'
 import type { Language } from '../i18n'
 import { Modal } from './Modal'
 
@@ -30,6 +31,7 @@ export function ChapterPrologue({ language, chapter, onClose }: ChapterPrologueP
       }
     >
       <div className="prologue">
+        <img className="prologue__art" src={chapterArtUrl(chapter)} alt="" width="1280" height="720" />
         {prologue.paragraphs[language].map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
