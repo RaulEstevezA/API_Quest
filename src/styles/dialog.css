@@ -15,9 +15,13 @@
   color: var(--text);
 }
 
-/* The API reference needs room for its columns. */
+/* The API reference needs room for its columns, and its title is already in the header. */
 .modal--wide {
   width: min(1100px, calc(100vw - 32px));
+}
+
+.modal--wide .docs__grid {
+  margin-top: 0;
 }
 
 .modal[open] {

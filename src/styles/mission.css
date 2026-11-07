@@ -15,7 +15,8 @@
   font-size: 0.78rem;
 }
 
-.screen-bar .button {
+/* Only the way back goes to the left; any other button stays with the indicators. */
+.screen-bar > .button:first-child {
   margin-right: auto;
 }
 
@@ -194,7 +195,7 @@
 }
 
 @media (max-width: 600px) {
-  .screen-bar .button {
+  .screen-bar > .button:first-child {
     width: 100%;
     margin: 0;
   }

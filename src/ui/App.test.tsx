@@ -28,6 +28,10 @@ function renderApp(storage: StorageAdapter) {
   act(() => root.render(<App storage={storage} />))
 }
 
+function click(element: Element | null | undefined) {
+  act(() => element?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+}
+
 /** Clicks an entry of the main menu by its visible text. */
 function openFromMenu(label: string) {
   const entry = [...container.querySelectorAll('nav .button')].find((button) => button.textContent === label)
@@ -103,6 +107,16 @@ describe('initial menu', () => {
     expect(container.querySelector('nav .button')?.textContent).toBe('Misiones')
     expect(document.documentElement.lang).toBe('es')
     expect(storage.getItem('lang')).toBe('es')
+  })
+
+  it('opens the API reference in a window without leaving the mission', () => {
+    renderApp(returningPlayerStorage())
+    openFromMenu('Missions')
+    click(container.querySelector('.mission-tile'))
+    click([...container.querySelectorAll('.screen-bar button')].find((button) => button.textContent === 'Docs'))
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled()
+    expect(container.querySelector('.workspace')).not.toBeNull()
+    expect(container.querySelector('dialog.modal--wide .docs__grid')).not.toBeNull()
   })
 
   it('tells the player when saved progress could not be restored', () => {

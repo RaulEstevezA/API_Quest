@@ -12,6 +12,8 @@ import { calculateXp } from '../../core/scoring'
 import { chapterEmblems } from '../art/emblems'
 import { PixelArt } from '../art/PixelArt'
 import type { Language } from '../i18n'
+import { ApiReference } from './ApiReference'
+import { Modal } from './Modal'
 import { PacketWire } from './PacketWire'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
@@ -90,6 +92,7 @@ export function MissionWorkspace({ mission, language, onBack, onComplete, onNext
   const [hintsUsed, setHintsUsed] = useState(0)
   const [issues, setIssues] = useState<EvaluationIssue[]>([])
   const [solved, setSolved] = useState(false)
+  const [docsOpen, setDocsOpen] = useState(false)
   const xp = useMemo(
     () => calculateXp({ attempts: Math.max(attempts, 1), hintsUsed, baseXp: mission.xp }),
     [attempts, hintsUsed, mission.xp],
@@ -109,6 +112,9 @@ export function MissionWorkspace({ mission, language, onBack, onComplete, onNext
   return (
     <div className={`chapter-theme chapter-theme--${mission.chapter}`}>
       <ScreenBar backLabel={text.backToChapters[language]} onBack={onBack}>
+        <button className="button button--small" type="button" onClick={() => setDocsOpen(true)}>
+          {uiText.menu.docs[language]}
+        </button>
         <span>{mission.service}</span>
         <span>
           {text.attempts[language]}: {attempts}
@@ -165,6 +171,18 @@ export function MissionWorkspace({ mission, language, onBack, onComplete, onNext
           )}
         </section>
       )}
+
+      {/* A window rather than a screen, so that the request being written is not lost. */}
+      <Modal
+        language={language}
+        open={docsOpen}
+        onClose={() => setDocsOpen(false)}
+        eyebrow={uiText.docs.eyebrow[language]}
+        title={uiText.docs.title[language]}
+        wide
+      >
+        <ApiReference language={language} />
+      </Modal>
     </div>
   )
 }
