@@ -45,56 +45,6 @@
   line-height: 1.65;
 }
 
-/* Progress summary */
-
-.progress-summary {
-  width: min(100%, 420px);
-  margin: var(--space-24) 0 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-8);
-}
-
-.progress-summary > div:not(.progress-summary__bar) {
-  padding: var(--space-12) var(--space-16);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(3, 8, 6, 0.86);
-  box-shadow: var(--hard-shadow);
-}
-
-.progress-summary dt {
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.progress-summary dd {
-  margin: var(--space-4) 0 0;
-  font-family: var(--mono);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent-text);
-}
-
-.progress-summary__bar {
-  grid-column: 1 / -1;
-  height: 8px;
-  margin-top: var(--space-4);
-  border: 1px solid var(--border);
-  background: var(--surface-sunken);
-}
-
-.progress-summary__bar i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--lime), var(--accent));
-  transition: width 0.4s ease;
-}
-
 /* Decorative traffic: only where there is room for it beside the title. */
 
 .title-screen__traffic {
