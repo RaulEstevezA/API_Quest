@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { getMission } from '../content/missions'
 import { uiText } from '../content/ui-text'
 import type { StorageAdapter } from '../core/storage'
+import { Backdrop } from './art/Backdrop'
 import { browserStorage } from './browser-storage'
 import { ApiDocs } from './components/ApiDocs'
 import { Dashboard } from './components/Dashboard'
@@ -84,6 +85,7 @@ export function App({ storage = browserStorage }: AppProps) {
 
   return (
     <>
+      <Backdrop prominent={screen.name === 'missions'} />
       <Header language={language} onLanguageChange={setLanguage} />
       <GameNav
         language={language}

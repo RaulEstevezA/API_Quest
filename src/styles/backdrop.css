@@ -1,0 +1,104 @@
+/*
+ * Background art of the game (ui/art/Backdrop.tsx). A gradient mask fades it into the
+ * page at the bottom and darkens the top, so that the website header keeps its contrast
+ * over the scene. Other screens dim it further, because players read there.
+ */
+
+.backdrop {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: min(70vh, 560px);
+  overflow: hidden;
+  opacity: 0.32;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), #000 22%, #000 62%, transparent);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), #000 22%, #000 62%, transparent);
+  transition: opacity 0.3s ease;
+}
+
+.backdrop--prominent {
+  height: min(92vh, 760px);
+  opacity: 0.8;
+}
+
+.backdrop svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.backdrop__back-rack {
+  fill: #07120e;
+}
+
+.backdrop__back-plate {
+  fill: #0b1b15;
+}
+
+.backdrop__tray {
+  fill: #143026;
+}
+
+.backdrop__floor {
+  fill: #0f241c;
+}
+
+.backdrop__front-rack {
+  fill: #0a1813;
+}
+
+.backdrop__front-plate {
+  fill: #11261f;
+}
+
+.backdrop__light {
+  fill: var(--accent);
+}
+
+.backdrop__light--blink-1 {
+  fill: var(--lime);
+  animation: backdrop-blink 2.3s steps(2, jump-none) infinite;
+}
+
+.backdrop__light--blink-2 {
+  animation: backdrop-blink 3.7s steps(2, jump-none) infinite 0.6s;
+}
+
+.backdrop__light--blink-3 {
+  fill: var(--warning);
+  animation: backdrop-blink 5.3s steps(2, jump-none) infinite 1.4s;
+}
+
+.backdrop__packet {
+  fill: var(--accent-text);
+  animation: backdrop-travel 7s linear infinite;
+}
+
+.backdrop__packet--late {
+  animation-delay: -3.5s;
+}
+
+.backdrop__packet--fast {
+  fill: var(--lime);
+  animation-duration: 4.5s;
+  animation-direction: reverse;
+}
+
+/* The distance equals the scene width plus the packet width, in art pixels. */
+@keyframes backdrop-travel {
+  to {
+    transform: translateX(496px);
+  }
+}
+
+@keyframes backdrop-blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.15;
+  }
+}

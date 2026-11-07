@@ -6,6 +6,7 @@
 @import './tokens.css';
 @import './base.css';
 @import './header.css';
+@import './backdrop.css';
 
 /* Initial menu: summary of the game and overall progress. */
 .hero {
