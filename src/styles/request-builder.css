@@ -1,0 +1,143 @@
+/*
+ * Request builder (components/RequestBuilder.tsx). The method and the path are joined
+ * into a single address bar, like the one drawn inside the game logo.
+ */
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.875rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--chapter-accent);
+}
+
+input:disabled,
+select:disabled {
+  color: var(--muted);
+}
+
+textarea {
+  min-height: 180px;
+  resize: vertical;
+  font-size: 13px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.request-line {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+}
+
+.request-line label,
+.body-field {
+  display: grid;
+  gap: var(--space-4);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.request-line select {
+  border-right: 0;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  font-weight: 800;
+}
+
+.request-line input {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Keeps the focus outline of each control above its neighbour. */
+.request-line select:focus-visible,
+.request-line input:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
+/* Each method keeps the same colour everywhere in the game, including the Docs screen. */
+.method-select--get,
+.method--get {
+  color: var(--accent-text);
+}
+
+.method-select--post,
+.method--post {
+  color: var(--lime);
+}
+
+.method-select--put,
+.method-select--patch,
+.method--put,
+.method--patch {
+  color: var(--warning);
+}
+
+.method-select--delete,
+.method--delete {
+  color: var(--danger);
+}
+
+fieldset {
+  margin: var(--space-16) 0 0;
+  padding: 0;
+  border: 0;
+}
+
+legend,
+.body-field > span {
+  margin-bottom: var(--space-4);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.key-value-list {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-8);
+}
+
+.key-value-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 44px;
+  gap: var(--space-8);
+}
+
+.body-field {
+  margin-top: var(--space-16);
+}
+
+@media (max-width: 600px) {
+  .request-line {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+
+  .key-value-row {
+    grid-template-columns: 1fr 44px;
+  }
+
+  .key-value-row input:nth-child(2) {
+    grid-column: 1;
+  }
+
+  .key-value-row .icon-button {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+}

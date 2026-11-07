@@ -86,6 +86,7 @@ export function RequestBuilder({ language, request, fields, solved, onChange, on
           <label>
             <span>{text.method[language]}</span>
             <select
+              className={`method-select--${request.method.toLowerCase()}`}
               value={request.method}
               disabled={!fields.includes('method')}
               onChange={(event) => onChange({ ...request, method: event.target.value as ApiRequest['method'] })}
