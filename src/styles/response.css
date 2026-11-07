@@ -116,6 +116,41 @@
   }
 }
 
+/* Traffic light that repeats the family of the status code. */
+
+.status-lights {
+  float: right;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+}
+
+.status-lights__led {
+  width: 10px;
+  height: 10px;
+  opacity: 0.18;
+}
+
+.status-lights__led--green {
+  background: var(--success);
+}
+
+.status-lights__led--yellow {
+  background: var(--warning);
+}
+
+.status-lights__led--red {
+  background: var(--danger);
+}
+
+.status-lights__led.is-on {
+  opacity: 1;
+  box-shadow: 0 0 8px currentColor;
+}
+
 /* Cable between the player and the API */
 
 .packet-wire {

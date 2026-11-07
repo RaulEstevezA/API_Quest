@@ -18,6 +18,7 @@ import { PacketWire } from './PacketWire'
 import { RequestBuilder } from './RequestBuilder'
 import { ResponseDetails, ResponsePane } from './ResponsePane'
 import { ScreenBar } from './ScreenBar'
+import { StatusLights } from './StatusLights'
 
 const text = uiText.mission
 
@@ -45,6 +46,7 @@ function initialRequest(mission: Mission): ApiRequest {
 function IssueFeedback({ issues, language }: { issues: EvaluationIssue[]; language: Language }) {
   return (
     <div className="feedback feedback--error" role="alert">
+      <StatusLights status={400} />
       <strong>400 Bad Request</strong>
       <p>{text.notSolved[language]}</p>
       <ul>

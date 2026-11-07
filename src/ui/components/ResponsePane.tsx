@@ -7,6 +7,7 @@ import type { ReactNode } from 'react'
 import { uiText } from '../../content/ui-text'
 import type { ApiResponse } from '../../core/http'
 import type { Language } from '../i18n'
+import { StatusLights } from './StatusLights'
 
 interface ResponsePaneProps {
   language: Language
@@ -31,6 +32,7 @@ export function ResponseDetails({ response }: { response: ApiResponse }) {
 
   return (
     <>
+      <StatusLights status={response.status} />
       <strong>
         {response.status} {response.statusText}
       </strong>
