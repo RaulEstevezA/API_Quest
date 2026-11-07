@@ -121,6 +121,7 @@ describe('initial menu', () => {
     renderApp(storage)
     openFromMenu('Ending')
     expect(container.querySelector('#ending-title')?.textContent).toBe('Shift complete')
+    expect(container.querySelector('.ending__art')?.getAttribute('src')).toContain('chapters/ending.webp')
     expect(container.querySelector('header')).toBeNull()
   })
 

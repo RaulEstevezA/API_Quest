@@ -4,6 +4,7 @@
  */
 
 import { uiText } from '../../content/ui-text'
+import { endingArtUrl } from '../art/chapter-art'
 import type { Language } from '../i18n'
 
 const text = uiText.ending
@@ -20,13 +21,7 @@ interface EndingScreenProps {
 export function EndingScreen({ language, xp, missions, achievements, onBack }: EndingScreenProps) {
   return (
     <section className="ending" aria-labelledby="ending-title">
-      <img
-        className="title-screen__logo"
-        src={`${import.meta.env.BASE_URL}api-quest-logo.png`}
-        alt=""
-        width="200"
-        height="200"
-      />
+      <img className="ending__art" src={endingArtUrl()} alt="" width="1280" height="720" />
       <p className="eyebrow">{text.eyebrow[language]}</p>
       <h1 className="ending__title" id="ending-title">
         {text.title[language]}
