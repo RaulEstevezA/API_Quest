@@ -34,6 +34,29 @@ npm run build
 
 The production build uses `/games/API_Quest/` as its base path for the personal website.
 
+## Architecture
+
+The game is split into three layers. Dependencies only point downwards, and the core does not know about React, the browser, or storage.
+
+```text
+src/ui/       React screens and state hooks. App.tsx is the composition root.
+src/content/  Declarative data: missions, chapters, API reference, interface texts.
+src/core/     Game rules: validation, scoring, progress, achievements, simulated API.
+```
+
+Each kind of change has one place to go:
+
+| Pattern | Where | To extend it |
+|---|---|---|
+| Registry | `content/missions.ts` | Add a mission to its `chapter-<n>.ts` file |
+| Registry | `core/achievements.ts` | Add an achievement with its unlock rule |
+| Registry | `core/evaluate-request.ts` | Add a validation rule to `requestRules` |
+| Strategy | `core/sandbox.ts` | One handler per HTTP method in `methodHandlers` |
+| State machine | `ui/screens.ts` | Add a screen to `Screen`; the compiler points to the `switch` in `App.tsx` |
+| Dependency inversion | `core/storage.ts` | Implement `StorageAdapter`, as `ui/browser-storage.ts` does |
+
+All visible text is a `LocalizedText` value, read as `text[language]`. Interface texts are in `content/ui-text.ts`.
+
 ## Suggestions
 
 Report an issue or suggestion at [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).

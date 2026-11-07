@@ -34,6 +34,29 @@ npm run build
 
 El build de producción utiliza `/games/API_Quest/` como ruta base para la web personal.
 
+## Arquitectura
+
+El juego se divide en tres capas. Las dependencias solo apuntan hacia abajo, y el núcleo no conoce React, el navegador ni el almacenamiento.
+
+```text
+src/ui/       Pantallas de React y hooks de estado. App.tsx es la raíz de composición.
+src/content/  Datos declarativos: misiones, capítulos, referencia de la API, textos de la interfaz.
+src/core/     Reglas del juego: validación, puntuación, progreso, logros, API simulada.
+```
+
+Cada tipo de cambio tiene un único lugar:
+
+| Patrón | Dónde | Cómo ampliarlo |
+|---|---|---|
+| Registro | `content/missions.ts` | Añade la misión a su archivo `chapter-<n>.ts` |
+| Registro | `core/achievements.ts` | Añade el logro con su regla de desbloqueo |
+| Registro | `core/evaluate-request.ts` | Añade la regla de validación a `requestRules` |
+| Estrategia | `core/sandbox.ts` | Un manejador por método HTTP en `methodHandlers` |
+| Máquina de estados | `ui/screens.ts` | Añade la pantalla a `Screen`; el compilador señala el `switch` de `App.tsx` |
+| Inversión de dependencias | `core/storage.ts` | Implementa `StorageAdapter`, como hace `ui/browser-storage.ts` |
+
+Todo el texto visible es un valor `LocalizedText`, que se lee como `text[language]`. Los textos de la interfaz están en `content/ui-text.ts`.
+
 ## Sugerencias
 
 Puedes comunicar un error o sugerencia en [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
