@@ -6,7 +6,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { PROGRESS_STORAGE_KEY } from '../core/progress'
+import { completeMission, createInitialProgress, PROGRESS_STORAGE_KEY, saveProgress } from '../core/progress'
 import { createMemoryStorage, type StorageAdapter } from '../core/storage'
 import { App } from './App'
 
@@ -65,11 +65,19 @@ describe('initial menu', () => {
     expect(entries).toEqual(['Missions', 'Docs', 'Sandbox', 'Achievements', 'How to play', 'Reset progress', 'Games'])
   })
 
-  it('shows the XP marker on the menu and on the mission list', () => {
+  it('shows the XP marker on the mission list only', () => {
     renderApp(returningPlayerStorage())
-    expect(container.querySelector('.progress-summary')).not.toBeNull()
+    expect(container.querySelector('.progress-summary')).toBeNull()
     openFromMenu('Missions')
     expect(container.querySelector('.progress-summary')).not.toBeNull()
+  })
+
+  it('offers to continue once the player has progress, and opens the first pending mission', () => {
+    const storage = returningPlayerStorage()
+    saveProgress(storage, completeMission(createInitialProgress(), 'first-request-1', 100, 1, 0))
+    renderApp(storage)
+    openFromMenu('Continue')
+    expect(container.querySelector('h1')?.textContent).toBe('Find user 42')
   })
 
   it.each(['Missions', 'Docs', 'Sandbox', 'Achievements'])(

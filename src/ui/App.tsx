@@ -7,8 +7,9 @@
  */
 
 import { useEffect, useState, type ReactNode } from 'react'
-import { getMission } from '../content/missions'
+import { getMission, missions } from '../content/missions'
 import { uiText } from '../content/ui-text'
+import { findFirstPendingMission, findNextMission } from '../core/progress'
 import type { StorageAdapter } from '../core/storage'
 import { Backdrop } from './art/Backdrop'
 import { browserStorage } from './browser-storage'
@@ -54,6 +55,12 @@ export function App({ storage = browserStorage }: AppProps) {
 
   const backToMenu = () => setScreen({ name: 'menu' })
 
+  const openMission = (missionId: string) => setScreen({ name: 'mission', missionId })
+
+  // A first-time player has nothing to continue: Missions is the way in.
+  const pendingMission = findFirstPendingMission(missions, progress)
+  const canContinue = pendingMission !== null && Object.keys(progress.completedMissions).length > 0
+
   /** Adds the way back to the screens that have nothing else in their bar. */
   const withMenuBar = (content: ReactNode) => (
     <>
@@ -67,7 +74,7 @@ export function App({ storage = browserStorage }: AppProps) {
       language={language}
       progress={progress}
       onBack={backToMenu}
-      onOpenMission={(missionId) => setScreen({ name: 'mission', missionId })}
+      onOpenMission={openMission}
     />
   )
 
@@ -77,9 +84,9 @@ export function App({ storage = browserStorage }: AppProps) {
         return (
           <MainMenu
             language={language}
-            progress={progress}
             storageAvailable={storageAvailable}
             progressWasReset={progressWasReset}
+            onContinue={canContinue ? () => openMission(pendingMission) : null}
             onNavigate={(name) => setScreen({ name })}
             onHelp={onboarding.show}
             onReset={resetWithConfirmation}
@@ -97,6 +104,7 @@ export function App({ storage = browserStorage }: AppProps) {
         const mission = getMission(screen.missionId)
         // An unknown identifier cannot come from the catalogue, but it must not leave a blank page.
         if (!mission) return renderMissionMap()
+        const nextId = findNextMission(missions, mission.id, progress)
         return (
           <MissionWorkspace
             key={mission.id}
@@ -104,6 +112,7 @@ export function App({ storage = browserStorage }: AppProps) {
             language={language}
             onBack={() => setScreen({ name: 'missions' })}
             onComplete={(xp, attempts, hints) => recordCompletion(mission.id, xp, attempts, hints)}
+            onNext={nextId ? () => openMission(nextId) : null}
           />
         )
       }

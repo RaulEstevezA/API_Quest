@@ -80,6 +80,20 @@
   animation: xp-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
 }
 
+/* XP on the left and the way forward on the right, wrapping when the pane is narrow. */
+.feedback__result {
+  margin-top: var(--space-16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
+
+.feedback__result .xp-earned {
+  margin: 0;
+}
+
 @keyframes feedback-arrive {
   from {
     opacity: 0;

@@ -1,6 +1,6 @@
 /**
- * XP and mission counter. It appears on the main menu and, in its compact form, on the
- * mission list. To move or remove the marker, change only the screens that render it.
+ * XP and mission counter, shown on the mission list. To move or remove the marker,
+ * change only the screens that render it.
  */
 
 import { missions } from '../../content/missions'

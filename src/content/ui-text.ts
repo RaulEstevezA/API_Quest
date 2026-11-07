@@ -49,6 +49,7 @@ export const uiText = {
   menu: {
     label: t('Main menu', 'Menú principal'),
     back: t('Menu', 'Menú'),
+    continue: t('Continue', 'Continuar'),
     docs: t('Docs', 'Docs'),
     sandbox: t('Sandbox', 'Sandbox'),
     help: t('How to play', 'Cómo jugar'),
@@ -96,6 +97,7 @@ export const uiText = {
     noResponse: t('Send a request to see the API response.', 'Envía una petición para ver la respuesta de la API.'),
     notSolved: t('The request does not meet the objective yet:', 'La petición todavía no cumple el objetivo:'),
     whyItWorks: t('Why it works', 'Por qué funciona'),
+    next: t('Next mission', 'Siguiente misión'),
     hints: t('Hints', 'Pistas'),
     showHint: t('Show a hint', 'Mostrar una pista'),
   },
