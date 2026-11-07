@@ -156,11 +156,19 @@ export const uiText = {
     authenticationHint: t('Protected endpoints expect this header:', 'Los endpoints protegidos esperan este header:'),
   },
   ending: {
-    eyebrow: t('All 56 missions complete', 'Las 56 misiones completadas'),
+    eyebrow: t('LOOPBACK · 07:00 · MORNING SHIFT', 'LOOPBACK · 07:00 · TURNO DE MAÑANA'),
     title: t('Shift complete', 'Turno completado'),
     paragraphs: {
-      en: ['You can now build, read and debug HTTP requests with confidence. The server room is yours.'],
-      es: ['Ya sabes construir, leer y depurar peticiones HTTP con soltura. La sala de servidores es tuya.'],
+      en: [
+        'Order 903 is closed, and Ana Torres has her refund. The queue is empty, the alert panel is green, and the sun is coming up through a window you had not noticed.',
+        'Noa comes back with two coffees, looks at the logs for a long time and puts one of them on your desk. You did not break production, and hardly anyone manages that on their first night.',
+        '“Same time tomorrow? And one more thing: that old session from the previous night shift never logged out. If you are ever curious, the Sandbox is still open. Start with user 42.”',
+      ],
+      es: [
+        'El pedido 903 está cerrado y Ana Torres tiene su reembolso. La cola está vacía, el panel de alertas está en verde y el sol entra por una ventana en la que no te habías fijado.',
+        'Noa vuelve con dos cafés, mira los registros durante un buen rato y deja uno sobre tu mesa. No has roto producción, y casi nadie lo consigue en su primera noche.',
+        '“¿Mañana a la misma hora? Y una cosa más: aquella sesión antigua del turno de noche anterior nunca se cerró. Si alguna vez te pica la curiosidad, el Sandbox sigue abierto. Empieza por el usuario 42.”',
+      ],
     },
   },
   modal: {
