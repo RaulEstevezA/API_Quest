@@ -56,6 +56,11 @@ describe('sandbox API', () => {
     expect(status('PATCH', '/products/17')).toBe(400)
   })
 
+  it('accepts query parameters typed in the path', () => {
+    expect(send('GET', '/products?name=Mouse').response.body).toEqual([])
+    expect(send('GET', '/products?name=Mechanical%20Keyboard').response.body).toHaveLength(1)
+  })
+
   it('declares the content type of responses with a body', () => {
     expect(send('GET', '/products').response.headers).toEqual({ 'Content-Type': 'application/json' })
     expect(send('DELETE', '/products/17').response.headers).toBeUndefined()

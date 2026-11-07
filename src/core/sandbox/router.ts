@@ -23,6 +23,13 @@ function withContentType(response: ApiResponse): ApiResponse {
   return { ...response, headers: { 'Content-Type': 'application/json' } }
 }
 
+/** Players may type `/products?page=2` in the path, as in any address bar, instead of using the query rows. */
+function withQueryFromPath(request: ApiRequest): ApiRequest {
+  const [path, rawQuery = ''] = request.path.trim().split('?')
+  const typed = [...new URLSearchParams(rawQuery)].map(([key, value], index) => ({ id: `path-${index}`, key, value }))
+  return { ...request, path, query: [...request.query, ...typed] }
+}
+
 /**
  * Runs a request against the simulated API.
  *
@@ -36,12 +43,12 @@ export function runSandboxRequest(
   request: ApiRequest,
   language: keyof LocalizedText = 'en',
 ): SandboxResult {
-  const parts = request.path
-    .trim()
+  const parsed = withQueryFromPath(request)
+  const parts = parsed.path
     .replace(/^\/+|\/+$/g, '')
     .split('/')
     .filter(Boolean)
-  const context = { state, request, parts, language }
+  const context = { state, request: parsed, parts, language }
 
   for (const route of routes) {
     const result = route(context)
