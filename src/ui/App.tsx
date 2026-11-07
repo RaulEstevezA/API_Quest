@@ -5,6 +5,7 @@ import { Header } from './components/Header'
 import { ApiDocs } from './components/ApiDocs'
 import { MissionWorkspace } from './components/MissionWorkspace'
 import { Sandbox } from './components/Sandbox'
+import { browserStorage } from './browser-storage'
 import { useGameProgress } from './use-game-progress'
 import { useLanguage } from './i18n'
 import { OnboardingDialog } from './components/OnboardingDialog'
@@ -46,7 +47,7 @@ export function App() {
   return <>
     <Header language={language} onLanguageChange={setLanguage} onHome={() => { setMissionId(null); setView('missions') }} onDocs={() => { setMissionId(null); setView('docs') }} onSandbox={() => { setMissionId(null); setView('sandbox') }} onHelp={() => setShowOnboarding(true)} />
     <main className="app-shell">
-      {mission ? <MissionWorkspace key={mission.id} mission={mission} language={language} onBack={() => setMissionId(null)} onComplete={(xp, attempts, hints) => recordCompletion(mission.id, xp, attempts, hints)} /> : view === 'docs' ? <ApiDocs language={language} /> : view === 'sandbox' ? <Sandbox language={language} /> : <Dashboard language={language} progress={progress} storageAvailable={storageAvailable} onOpenMission={setMissionId} onReset={resetWithConfirmation} />}
+      {mission ? <MissionWorkspace key={mission.id} mission={mission} language={language} onBack={() => setMissionId(null)} onComplete={(xp, attempts, hints) => recordCompletion(mission.id, xp, attempts, hints)} /> : view === 'docs' ? <ApiDocs language={language} /> : view === 'sandbox' ? <Sandbox language={language} storage={browserStorage} /> : <Dashboard language={language} progress={progress} storageAvailable={storageAvailable} onOpenMission={setMissionId} onReset={resetWithConfirmation} />}
     </main>
     <OnboardingDialog language={language} open={showOnboarding} onClose={closeOnboarding} onStart={startFirstMission} />
   </>

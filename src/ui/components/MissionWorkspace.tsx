@@ -1,40 +1,79 @@
+/**
+ * Screen of a mission: brief, request builder, response and hints. It holds only
+ * the state of the attempt in progress; validation and scoring come from `core/`.
+ */
+
 import { useMemo, useState } from 'react'
-import type { EvaluationIssue } from '../../core/evaluate-request'
-import { evaluateRequest } from '../../core/evaluate-request'
+import { issueText, uiText } from '../../content/ui-text'
+import { evaluateRequest, type EvaluationIssue } from '../../core/evaluate-request'
 import { createEmptyRequest, type ApiRequest } from '../../core/http'
 import type { Mission } from '../../core/missions'
 import { calculateXp } from '../../core/scoring'
 import type { Language } from '../i18n'
 import { RequestBuilder } from './RequestBuilder'
+import { ResponseDetails, ResponsePane } from './ResponsePane'
 
-interface Props { mission: Mission; language: Language; onBack: () => void; onComplete: (xp: number, attempts: number, hints: number) => void }
+const text = uiText.mission
 
+interface MissionWorkspaceProps {
+  mission: Mission
+  language: Language
+  onBack: () => void
+  /** Called once when the mission is solved, with the XP earned and the effort spent. */
+  onComplete: (xp: number, attempts: number, hints: number) => void
+}
+
+/** Creates the request the mission starts from, which may come prefilled so it can be repaired. */
 function initialRequest(mission: Mission): ApiRequest {
-  return { ...createEmptyRequest(), ...mission.starter, query: mission.starter?.query ?? [], headers: mission.starter?.headers ?? [] }
-}
-
-function issueText(issue: EvaluationIssue, language: Language) {
-  const texts: Record<EvaluationIssue['code'], [string, string]> = {
-    method: [`Use ${issue.expected}, not ${issue.received}.`, `Usa ${issue.expected}, no ${issue.received}.`],
-    path: [`The endpoint should be ${issue.expected}.`, `El endpoint debe ser ${issue.expected}.`],
-    'query-missing': [`Check the query parameter “${issue.key}”.`, `Revisa el parámetro query «${issue.key}».`],
-    'query-unexpected': [`The query parameter “${issue.key}” is not needed.`, `No necesitas el parámetro query «${issue.key}».`],
-    'header-missing': [`Check the “${issue.key}” header.`, `Revisa el header «${issue.key}».`],
-    'header-unexpected': [`The “${issue.key}” header is not needed.`, `No necesitas el header «${issue.key}».`],
-    'body-missing': ['Add the required JSON body.', 'Añade el cuerpo JSON requerido.'],
-    'body-invalid-json': ['The body is not valid JSON. Check quotes, commas, and values.', 'El cuerpo no es JSON válido. Revisa comillas, comas y valores.'],
-    'body-mismatch': ['The JSON is valid, but its fields or values do not match the task.', 'El JSON es válido, pero sus campos o valores no coinciden con la tarea.'],
+  return {
+    ...createEmptyRequest(),
+    ...mission.starter,
+    query: mission.starter?.query ?? [],
+    headers: mission.starter?.headers ?? [],
   }
-  return texts[issue.code][language === 'es' ? 1 : 0]
 }
 
-export function MissionWorkspace({ mission, language, onBack, onComplete }: Props) {
+/** Renders the validation problems of a failed attempt. */
+function IssueFeedback({ issues, language }: { issues: EvaluationIssue[]; language: Language }) {
+  return (
+    <div className="feedback feedback--error" role="alert">
+      <strong>400 Bad Request</strong>
+      <p>{text.notSolved[language]}</p>
+      <ul>
+        {issues.map((issue, index) => (
+          <li key={`${issue.code}-${index}`}>{issueText[issue.code](issue)[language]}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/** Renders the simulated response, the explanation and the XP of a solved mission. */
+function SolvedFeedback({ mission, xp, language }: { mission: Mission; xp: number; language: Language }) {
+  // Some missions teach how to read an error, so a 4xx or 5xx can be the right outcome.
+  const tone = mission.successResponse.status >= 400 ? 'feedback--expected-error' : 'feedback--success'
+
+  return (
+    <div className={`feedback ${tone}`} role="status">
+      <ResponseDetails response={mission.successResponse} />
+      <h3>{text.whyItWorks[language]}</h3>
+      <p>{mission.explanation[language]}</p>
+      <p className="xp-earned">+{xp} XP</p>
+    </div>
+  )
+}
+
+/** Renders a mission and manages its attempts. */
+export function MissionWorkspace({ mission, language, onBack, onComplete }: MissionWorkspaceProps) {
   const [request, setRequest] = useState(() => initialRequest(mission))
   const [attempts, setAttempts] = useState(0)
   const [hintsUsed, setHintsUsed] = useState(0)
   const [issues, setIssues] = useState<EvaluationIssue[]>([])
   const [solved, setSolved] = useState(false)
-  const xp = useMemo(() => calculateXp({ attempts: Math.max(attempts, 1), hintsUsed, baseXp: mission.xp }), [attempts, hintsUsed, mission.xp])
+  const xp = useMemo(
+    () => calculateXp({ attempts: Math.max(attempts, 1), hintsUsed, baseXp: mission.xp }),
+    [attempts, hintsUsed, mission.xp],
+  )
 
   const send = () => {
     const nextAttempts = attempts + 1
@@ -42,23 +81,67 @@ export function MissionWorkspace({ mission, language, onBack, onComplete }: Prop
     const result = evaluateRequest(mission, request)
     setIssues(result.issues)
     if (result.correct) {
-      const earned = calculateXp({ attempts: nextAttempts, hintsUsed, baseXp: mission.xp })
       setSolved(true)
-      onComplete(earned, nextAttempts, hintsUsed)
+      onComplete(calculateXp({ attempts: nextAttempts, hintsUsed, baseXp: mission.xp }), nextAttempts, hintsUsed)
     }
   }
 
-  return <>
-    <div className="mission-toolbar"><button className="button" type="button" onClick={onBack}>← {language === 'es' ? 'Capítulos' : 'Chapters'}</button><span>{mission.service}</span><span>{language === 'es' ? 'Intentos' : 'Attempts'}: {attempts}</span><span>{xp} XP</span></div>
-    <section className="mission-brief window"><p className="eyebrow">{language === 'es' ? `Capítulo ${mission.chapter} · Misión ${mission.order}` : `Chapter ${mission.chapter} · Mission ${mission.order}`}</p><h1>{mission.title[language]}</h1><p>{mission.brief[language]}</p><div className="objective"><strong>{language === 'es' ? 'Objetivo' : 'Objective'}</strong><span>{mission.objective[language]}</span></div></section>
-    <div className="workspace">
-      <RequestBuilder language={language} request={request} fields={mission.availableFields} disabled={solved} onChange={setRequest} onSend={send} />
-      <section className="pane response-pane" aria-labelledby="response-title"><div className="pane__header"><h2 id="response-title">Response</h2></div><div className="pane__body">
-        {!solved && issues.length === 0 && <p className="empty-state">{language === 'es' ? 'Envía una petición para ver la respuesta de la API.' : 'Send a request to see the API response.'}</p>}
-        {!solved && issues.length > 0 && <div className="feedback feedback--error" role="alert"><strong>400 Bad Request</strong><p>{language === 'es' ? 'La petición todavía no cumple el objetivo:' : 'The request does not meet the objective yet:'}</p><ul>{issues.map((issue, index) => <li key={`${issue.code}-${index}`}>{issueText(issue, language)}</li>)}</ul></div>}
-        {solved && <div className={`feedback ${mission.successResponse.status >= 400 ? 'feedback--expected-error' : 'feedback--success'}`} role="status"><strong>{mission.successResponse.status} {mission.successResponse.statusText}</strong>{mission.successResponse.headers && <pre>{Object.entries(mission.successResponse.headers).map(([key,value]) => `${key}: ${value}`).join('\n')}</pre>}{mission.successResponse.body !== undefined && <pre>{JSON.stringify(mission.successResponse.body, null, 2)}</pre>}<h3>{language === 'es' ? 'Por qué funciona' : 'Why it works'}</h3><p>{mission.explanation[language]}</p><p className="xp-earned">+{xp} XP</p></div>}
-      </div></section>
-    </div>
-    {!solved && mission.hints.length > 0 && <section className="hint-panel"><div><h2>{language === 'es' ? 'Pistas' : 'Hints'}</h2>{mission.hints.slice(0, hintsUsed).map((hint, index) => <p key={index}><strong>{index + 1}.</strong> {hint[language]}</p>)}</div>{hintsUsed < mission.hints.length && <button className="button" type="button" onClick={() => setHintsUsed((count) => count + 1)}>{language === 'es' ? 'Mostrar una pista' : 'Show a hint'}</button>}</section>}
-  </>
+  return (
+    <>
+      <div className="mission-toolbar">
+        <button className="button" type="button" onClick={onBack}>
+          ← {text.backToChapters[language]}
+        </button>
+        <span>{mission.service}</span>
+        <span>
+          {text.attempts[language]}: {attempts}
+        </span>
+        <span>{xp} XP</span>
+      </div>
+
+      <section className="mission-brief window">
+        <p className="eyebrow">{text.position(mission.chapter, mission.order)[language]}</p>
+        <h1>{mission.title[language]}</h1>
+        <p>{mission.brief[language]}</p>
+        <div className="objective">
+          <strong>{text.objective[language]}</strong>
+          <span>{mission.objective[language]}</span>
+        </div>
+      </section>
+
+      <div className="workspace">
+        <RequestBuilder
+          language={language}
+          request={request}
+          fields={mission.availableFields}
+          solved={solved}
+          onChange={setRequest}
+          onSend={send}
+        />
+        <ResponsePane language={language}>
+          {!solved && issues.length === 0 && <p className="empty-state">{text.noResponse[language]}</p>}
+          {!solved && issues.length > 0 && <IssueFeedback issues={issues} language={language} />}
+          {solved && <SolvedFeedback mission={mission} xp={xp} language={language} />}
+        </ResponsePane>
+      </div>
+
+      {!solved && mission.hints.length > 0 && (
+        <section className="hint-panel">
+          <div>
+            <h2>{text.hints[language]}</h2>
+            {mission.hints.slice(0, hintsUsed).map((hint, index) => (
+              <p key={index}>
+                <strong>{index + 1}.</strong> {hint[language]}
+              </p>
+            ))}
+          </div>
+          {hintsUsed < mission.hints.length && (
+            <button className="button" type="button" onClick={() => setHintsUsed((count) => count + 1)}>
+              {text.showHint[language]}
+            </button>
+          )}
+        </section>
+      )}
+    </>
+  )
 }

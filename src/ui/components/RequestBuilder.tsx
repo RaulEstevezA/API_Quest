@@ -1,40 +1,152 @@
-import { HTTP_METHODS, type ApiRequest, type HeaderEntry, type QueryEntry } from '../../core/http'
-import type { Language } from '../i18n'
-import type { RequestField } from '../../core/missions'
+/**
+ * Form used to build an HTTP request, shared by missions and the Sandbox. It knows
+ * nothing about validation: it edits a request and reports when the player sends it.
+ */
 
-interface Props {
+import { uiText } from '../../content/ui-text'
+import { HTTP_METHODS, type ApiRequest, type QueryEntry } from '../../core/http'
+import type { RequestField } from '../../core/missions'
+import type { Language } from '../i18n'
+
+const text = uiText.request
+
+/** Editable row shared by query parameters and headers, which have the same shape. */
+type KeyValueEntry = QueryEntry
+
+interface RequestBuilderProps {
   language: Language
   request: ApiRequest
+  /** Parts of the request the current exercise allows editing. */
   fields: RequestField[]
-  disabled: boolean
+  /** `true` when the mission is solved, which disables sending. */
+  solved: boolean
   onChange: (request: ApiRequest) => void
   onSend: () => void
 }
 
-const createEntry = (): QueryEntry => ({ id: crypto.randomUUID(), key: '', value: '' })
+interface KeyValueEditorProps {
+  language: Language
+  /** Name of the group, used to label each row for screen readers. */
+  group: string
+  entries: KeyValueEntry[]
+  onChange: (entries: KeyValueEntry[]) => void
+}
 
-export function RequestBuilder({ language, request, fields, disabled, onChange, onSend }: Props) {
-  const updateEntries = (type: 'query' | 'headers', entries: QueryEntry[] | HeaderEntry[]) => onChange({ ...request, [type]: entries })
-  const renderEntries = (type: 'query' | 'headers') => {
-    const entries = request[type]
-    return <div className="key-value-list">{entries.map((entry, index) => <div className="key-value-row" key={entry.id}>
-      <input aria-label={`${type} ${language === 'es' ? 'clave' : 'key'} ${index + 1}`} placeholder={language === 'es' ? 'Clave' : 'Key'} value={entry.key} onChange={(event) => updateEntries(type, entries.map((item) => item.id === entry.id ? { ...item, key: event.target.value } : item))} />
-      <input aria-label={`${type} ${language === 'es' ? 'valor' : 'value'} ${index + 1}`} placeholder={language === 'es' ? 'Valor' : 'Value'} value={entry.value} onChange={(event) => updateEntries(type, entries.map((item) => item.id === entry.id ? { ...item, value: event.target.value } : item))} />
-      <button className="icon-button" type="button" aria-label={language === 'es' ? 'Eliminar fila' : 'Remove row'} onClick={() => updateEntries(type, entries.filter((item) => item.id !== entry.id))}>×</button>
-    </div>)}<button className="button button--small" type="button" onClick={() => updateEntries(type, [...entries, createEntry()])}>{language === 'es' ? 'Añadir fila' : 'Add row'}</button></div>
-  }
+/** Renders the editable rows of query parameters or headers. */
+function KeyValueEditor({ language, group, entries, onChange }: KeyValueEditorProps) {
+  const updateEntry = (id: string, change: Partial<KeyValueEntry>) =>
+    onChange(entries.map((item) => (item.id === id ? { ...item, ...change } : item)))
 
-  return <section className="pane request-builder" aria-labelledby="request-title">
-    <div className="pane__header"><h2 id="request-title">{language === 'es' ? 'Constructor de petición' : 'Request Builder'}</h2></div>
-    <div className="pane__body">
-      <div className="request-line">
-        <label><span>{language === 'es' ? 'Método' : 'Method'}</span><select value={request.method} disabled={!fields.includes('method')} onChange={(event) => onChange({ ...request, method: event.target.value as ApiRequest['method'] })}>{HTTP_METHODS.map((method) => <option key={method}>{method}</option>)}</select></label>
-        <label className="request-line__path"><span>Endpoint</span><input value={request.path} disabled={!fields.includes('path')} placeholder="/users/42" onChange={(event) => onChange({ ...request, path: event.target.value })} /></label>
-      </div>
-      {fields.includes('query') && <fieldset><legend>Query parameters</legend>{renderEntries('query')}</fieldset>}
-      {fields.includes('headers') && <fieldset><legend>Headers</legend>{renderEntries('headers')}</fieldset>}
-      {fields.includes('body') && <label className="body-field"><span>JSON body</span><textarea spellCheck={false} value={request.body} placeholder={'{\n  "name": "Ana"\n}'} onChange={(event) => onChange({ ...request, body: event.target.value })} /></label>}
+  return (
+    <div className="key-value-list">
+      {entries.map((entry, index) => (
+        <div className="key-value-row" key={entry.id}>
+          <input
+            aria-label={text.rowKey(group, index + 1)[language]}
+            placeholder={text.key[language]}
+            value={entry.key}
+            onChange={(event) => updateEntry(entry.id, { key: event.target.value })}
+          />
+          <input
+            aria-label={text.rowValue(group, index + 1)[language]}
+            placeholder={text.value[language]}
+            value={entry.value}
+            onChange={(event) => updateEntry(entry.id, { value: event.target.value })}
+          />
+          <button
+            className="icon-button"
+            type="button"
+            aria-label={text.removeRow[language]}
+            onClick={() => onChange(entries.filter((item) => item.id !== entry.id))}
+          >
+            ×
+          </button>
+        </div>
+      ))}
+      <button
+        className="button button--small"
+        type="button"
+        onClick={() => onChange([...entries, { id: crypto.randomUUID(), key: '', value: '' }])}
+      >
+        {text.addRow[language]}
+      </button>
     </div>
-    <div className="pane__footer"><span>{request.method} {request.path || '/'}</span><button className="button button--primary" type="button" disabled={disabled} onClick={onSend}>{disabled ? (language === 'es' ? 'Resuelto' : 'Solved') : (language === 'es' ? 'Enviar petición' : 'Send Request')}</button></div>
-  </section>
+  )
+}
+
+/** Renders the request form. */
+export function RequestBuilder({ language, request, fields, solved, onChange, onSend }: RequestBuilderProps) {
+  return (
+    <section className="pane request-builder" aria-labelledby="request-title">
+      <div className="pane__header">
+        <h2 id="request-title">{text.title[language]}</h2>
+      </div>
+      <div className="pane__body">
+        <div className="request-line">
+          <label>
+            <span>{text.method[language]}</span>
+            <select
+              value={request.method}
+              disabled={!fields.includes('method')}
+              onChange={(event) => onChange({ ...request, method: event.target.value as ApiRequest['method'] })}
+            >
+              {HTTP_METHODS.map((method) => (
+                <option key={method}>{method}</option>
+              ))}
+            </select>
+          </label>
+          <label className="request-line__path">
+            <span>Endpoint</span>
+            <input
+              value={request.path}
+              disabled={!fields.includes('path')}
+              placeholder="/users/42"
+              onChange={(event) => onChange({ ...request, path: event.target.value })}
+            />
+          </label>
+        </div>
+        {fields.includes('query') && (
+          <fieldset>
+            <legend>{text.queryParameters[language]}</legend>
+            <KeyValueEditor
+              language={language}
+              group="Query"
+              entries={request.query}
+              onChange={(query) => onChange({ ...request, query })}
+            />
+          </fieldset>
+        )}
+        {fields.includes('headers') && (
+          <fieldset>
+            <legend>{text.headers[language]}</legend>
+            <KeyValueEditor
+              language={language}
+              group="Headers"
+              entries={request.headers}
+              onChange={(headers) => onChange({ ...request, headers })}
+            />
+          </fieldset>
+        )}
+        {fields.includes('body') && (
+          <label className="body-field">
+            <span>{text.jsonBody[language]}</span>
+            <textarea
+              spellCheck={false}
+              value={request.body}
+              placeholder={'{\n  "name": "Ana"\n}'}
+              onChange={(event) => onChange({ ...request, body: event.target.value })}
+            />
+          </label>
+        )}
+      </div>
+      <div className="pane__footer">
+        <span>
+          {request.method} {request.path || '/'}
+        </span>
+        <button className="button button--primary" type="button" disabled={solved} onClick={onSend}>
+          {(solved ? text.solved : text.send)[language]}
+        </button>
+      </div>
+    </section>
+  )
 }
