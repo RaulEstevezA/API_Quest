@@ -67,4 +67,13 @@
   --modal-shadow: 0 0 0 1px var(--accent-soft), 0 24px 80px #000;
 
   --transition-fast: 0.15s ease;
+
+  /* Canonical fade-in protocol from personal_web_style. */
+  --fade-page-out: 0.16s ease-in;
+  --fade-page-in: 0.28s ease-out;
+  --fade-reveal: 0.25s ease;
+  --fade-reveal-timeout: 1.5s;
+  --fade-modal-in: 0.2s ease;
+  --fade-modal-out: 0.18s ease-in;
+  --fade-modal-scale: 0.97;
 }

@@ -6,6 +6,7 @@
 @import './tokens.css';
 @import './chapter-themes.css';
 @import './base.css';
+@import './fade-in.css';
 @import './header.css';
 @import './backdrop.css';
 @import './title-screen.css';

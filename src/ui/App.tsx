@@ -7,6 +7,7 @@
  */
 
 import { useEffect, useState, type ReactNode } from 'react'
+import { flushSync } from 'react-dom'
 import { getMission, missions } from '../content/missions'
 import { uiText } from '../content/ui-text'
 import { findFirstPendingMission, findNextMission } from '../core/progress'
@@ -26,6 +27,7 @@ import { OnboardingDialog } from './components/OnboardingDialog'
 import { Sandbox } from './components/Sandbox'
 import { ScreenBar } from './components/ScreenBar'
 import { useLanguage } from './i18n'
+import { withPageFade } from './motion'
 import { FIRST_MISSION_ID, INITIAL_SCREEN, type Screen } from './screens'
 import { useGameProgress } from './use-game-progress'
 import { useOnboarding } from './use-onboarding'
@@ -49,6 +51,11 @@ export function App({ storage = browserStorage }: AppProps) {
   // Prologue the player asked to reread from the chapter list.
   const [rereading, setRereading] = useState<ChapterId | null>(null)
 
+  /** Screen and language changes are the SPA equivalent of page navigation. */
+  const changeScreen = (next: Screen) => withPageFade(() => flushSync(() => setScreen(next)))
+  const changeLanguage = (next: Parameters<typeof setLanguage>[0]) =>
+    withPageFade(() => flushSync(() => setLanguage(next)))
+
   // Each screen is a new page for the player, so it must start at the top.
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -63,14 +70,14 @@ export function App({ storage = browserStorage }: AppProps) {
 
   const startFirstMission = () => {
     onboarding.close()
-    setScreen({ name: 'mission', missionId: FIRST_MISSION_ID })
+    changeScreen({ name: 'mission', missionId: FIRST_MISSION_ID })
   }
 
-  const backToMenu = () => setScreen({ name: 'menu' })
+  const backToMenu = () => changeScreen({ name: 'menu' })
 
-  const openMission = (missionId: string) => setScreen({ name: 'mission', missionId })
+  const openMission = (missionId: string) => changeScreen({ name: 'mission', missionId })
 
-  const showEnding = () => setScreen({ name: 'ending' })
+  const showEnding = () => changeScreen({ name: 'ending' })
 
   // A first-time player has nothing to continue: Missions is the way in.
   const pendingMission = findFirstPendingMission(missions, progress)
@@ -110,7 +117,7 @@ export function App({ storage = browserStorage }: AppProps) {
             storageAvailable={storageAvailable}
             progressWasReset={progressWasReset}
             primary={menuPrimary()}
-            onNavigate={(name) => setScreen({ name })}
+            onNavigate={(name) => changeScreen({ name })}
             onHelp={onboarding.show}
             onReset={resetWithConfirmation}
           />
@@ -143,7 +150,7 @@ export function App({ storage = browserStorage }: AppProps) {
             key={mission.id}
             mission={mission}
             language={language}
-            onBack={() => setScreen({ name: 'missions' })}
+            onBack={() => changeScreen({ name: 'missions' })}
             onComplete={(xp, attempts, hints) => recordCompletion(mission.id, xp, attempts, hints)}
             next={
               nextId
@@ -169,7 +176,7 @@ export function App({ storage = browserStorage }: AppProps) {
   return (
     <>
       <Backdrop prominent={screen.name === 'menu'} lights={sandbox.lights} alarm={sandbox.alarm} />
-      {screen.name === 'menu' && <Header language={language} onLanguageChange={setLanguage} />}
+      {screen.name === 'menu' && <Header language={language} onLanguageChange={changeLanguage} />}
       <main className="app-shell">{renderScreen()}</main>
       {prologueChapter && (
         <ChapterPrologue language={language} chapter={prologueChapter} onClose={closePrologue} key={prologueChapter} />
