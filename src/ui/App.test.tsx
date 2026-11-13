@@ -65,6 +65,25 @@ describe('initial menu', () => {
     expect(header?.querySelector('nav')).toBeNull()
   })
 
+  it('fades before following the name link to the personal website', () => {
+    vi.useFakeTimers()
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: vi.fn().mockReturnValue({ matches: false }),
+    })
+    renderApp(returningPlayerStorage())
+
+    const link = container.querySelector<HTMLAnchorElement>('a.brand')
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+    act(() => link?.dispatchEvent(event))
+
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.documentElement.classList.contains('page-is-leaving')).toBe(true)
+    vi.clearAllTimers()
+    document.documentElement.classList.remove('page-is-leaving')
+    vi.useRealTimers()
+  })
+
   it('offers every destination of the game in its menu', () => {
     renderApp(returningPlayerStorage())
     const entries = [...container.querySelectorAll('nav .button')].map((entry) => entry.textContent)

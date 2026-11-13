@@ -29,6 +29,12 @@
   from { opacity: 0; }
 }
 
+/* Regular document navigation (the name link back to the personal website). */
+.page-is-leaving body {
+  pointer-events: none;
+  animation: fade-out var(--fade-page-out) both;
+}
+
 /* Native dialog opening and, where overlay is supported, closing. */
 .modal[open],
 .modal[open]::backdrop {

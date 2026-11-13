@@ -6,6 +6,7 @@
 
 import { uiText } from '../../content/ui-text'
 import { LANGUAGES, type Language } from '../i18n'
+import { followLinkWithPageFade } from '../motion'
 
 interface HeaderProps {
   language: Language
@@ -16,7 +17,7 @@ interface HeaderProps {
 export function Header({ language, onLanguageChange }: HeaderProps) {
   return (
     <header className="site-header">
-      <a className="brand" href="https://raulesteveza.github.io/">
+      <a className="brand" href="https://raulesteveza.github.io/" onClick={followLinkWithPageFade}>
         Raúl Estévez
       </a>
       <div className="language-switch" role="group" aria-label={uiText.header.languageGroup[language]}>
