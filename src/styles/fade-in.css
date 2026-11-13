@@ -4,6 +4,11 @@
  * header remain outside that layer and keep their existing behaviour.
  */
 
+/* Entry from another document, including the personal website. */
+body {
+  animation: fade-in var(--fade-page-in) both;
+}
+
 .app-shell {
   view-transition-name: game-screen;
 }
